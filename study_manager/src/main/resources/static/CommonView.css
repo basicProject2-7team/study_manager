@@ -1,0 +1,17 @@
+#topBox {
+    -fx-alignment: space-around;
+}
+.topButton {
+    -fx-pref-height: 56;
+    -fx-pref-width: 150;
+    -fx-border-width: 0.1;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+}
+.topButton:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+Button {
+    -fx-border-style: none;
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.sm.study_manager.CommonController"
+            stylesheets="@../../../static/CommonView.css"
+            prefHeight="800.0" prefWidth="600.0">
+    <HBox alignment="CENTER" prefHeight="56" prefWidth="600">
+        <Button fx:id="topCalenderButton" onAction="#moveCalender" styleClass="topButton" text="달력" />
+        <Button fx:id="topTimerButton" onAction="#moveTimer" styleClass="topButton" text="타이머" />
+        <Button fx:id="topPetButton" onAction="#movePet" styleClass="topButton" text="포켓몬" />
+        <Button fx:id="topMusicButton" onAction="#moveMusic" styleClass="topButton" text="음악" />
+    </HBox>
+</AnchorPane>
