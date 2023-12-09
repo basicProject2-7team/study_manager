@@ -96,6 +96,11 @@
                         <font>
                            <Font size="18.0" />
                         </font></Button>
+                     <Button fx:id="timeStopButton" layoutX="223.0" layoutY="215.0" mnemonicParsing="false" onAction="#toggleTime" prefHeight="36.0" prefWidth="94.0" style="-fx-background-color: #244949;" text="일시정지 / 재개" textFill="#9aabab" GridPane.rowIndex="1">
+                        <font>
+                           <Font size="10.0" />
+                        </font>
+                     </Button>
                   </children>
                </GridPane>
             </children>

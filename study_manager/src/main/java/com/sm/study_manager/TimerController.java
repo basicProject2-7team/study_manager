@@ -31,6 +31,9 @@ import javafx.scene.layout.AnchorPane;
 
 public class TimerController extends CommonController implements Initializable {
 
+    // db 연동
+
+
     @FXML
     private  Label totalStudyTime;
     // 오늘 공부한 총 시간이고,  흐르는 시간에 원래는 - 되지만 totalStudyTime 에 += 1
@@ -71,7 +74,7 @@ public class TimerController extends CommonController implements Initializable {
 
     Integer temp = 0;   // 이게 임시로 0으로 되야됨 한번 넣으면 그치
 
-
+    private volatile boolean isPaused = false; // 일시정지 상태 추적
 
     // Event handler for the start button
     @FXML
@@ -85,39 +88,64 @@ public class TimerController extends CommonController implements Initializable {
     }
 
 
+//    void startCountdown() {
+//        thrd = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while(currSeconds >= 0) {
+//                        Platform.runLater(() -> setOutput()); // UI 업데이트를 FX 스레드에서 실행
+//                        Thread.sleep(1000);
+//                        currSeconds -= 1;
+//                        temp += 1; // 경과 시간 증가 일단 총 시간
+//
+//
+//                    }
+//
+//                        Platform.runLater(() -> {
+//                            updateTotalStudyTimeLabel();
+//                            temp = 0;   // 임시로 지금 흐른시간 0 초로 다시돌려줌.
+//                            scrollDown(); // FX 스레드에서 UI 업데이트
+//                            thrd.stop();
+//                            System.out.println("피니시");
+//                        });
+//
+//
+//                } catch (InterruptedException e) {
+//                    System.out.println("스레드가 중단됨: " + e);
+//                } catch (Exception e) {
+//                    System.out.println("오류: " + e);
+//                }
+//            }
+//        });
+//        thrd.start();
+//    }
+
     void startCountdown() {
         thrd = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while(currSeconds >= 0) {
-                        Platform.runLater(() -> setOutput()); // UI 업데이트를 FX 스레드에서 실행
-                        Thread.sleep(1000);
-                        currSeconds -= 1;
-                        temp += 1; // 경과 시간 증가 일단 총 시간
-
-
+                        if (!isPaused) {    // 처음에 false 였다가 누르면 true 라서 여기 진행안됨.
+                            Platform.runLater(() -> setOutput());
+                            currSeconds -= 1;
+                            temp += 1;
+                        }
+                        Thread.sleep(1000); // 항상 1초마다 잠시 멈춥니다.
                     }
-
-                        Platform.runLater(() -> {
-                            updateTotalStudyTimeLabel();
-                            temp = 0;   // 임시로 지금 흐른시간 0 초로 다시돌려줌.
-                            scrollDown(); // FX 스레드에서 UI 업데이트
-                            thrd.stop();
-                            System.out.println("피니시");
-                        });
-
-
+                    Platform.runLater(() -> {   // 시간이 0보다작아지면
+                        updateTotalStudyTimeLabel();     // 흐른시간을 위 라벨에 더해주고
+                        temp = 0;   // 타이머 흐른 시간 0 으로초기화
+                        scrollDown();   // 시간 정하는 화면으로 전환
+                    });
                 } catch (InterruptedException e) {
                     System.out.println("스레드가 중단됨: " + e);
-                } catch (Exception e) {
-                    System.out.println("오류: " + e);
                 }
             }
         });
         thrd.start();
     }
-
     void updateTotalStudyTimeLabel() {
         total += temp;
         // totalStudyTime 값을 사용하여 라벨 업데이트
@@ -147,6 +175,14 @@ public class TimerController extends CommonController implements Initializable {
 
 
     }
+
+
+
+    @FXML
+    private void toggleTime(ActionEvent event) {
+        isPaused = !isPaused; // 일시정지 상태를 전환
+    }
+
 
     Integer hmsToSeconds(Integer h , Integer m , Integer s ) {
         Integer hToSeconds = h* 3600;
