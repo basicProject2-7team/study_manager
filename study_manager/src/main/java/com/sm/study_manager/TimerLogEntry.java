@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 
 public class TimerLogEntry {
     // 생성자
-    TimerLogEntry(LocalDateTime startTime , LocalDateTime endTime){
+    public TimerLogEntry(LocalDateTime startTime, LocalDateTime endTime, int durationInSeconds) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.durationInSeconds = durationInSeconds;
     }
     
     
@@ -14,6 +15,17 @@ public class TimerLogEntry {
 
     private LocalDateTime endTime;
 
+    private int durationInSeconds;  // 흐른시간
+
+    public int getDurationInSeconds() {
+        return durationInSeconds;
+    }
+
+    public void setDurationInSeconds(int durationInSeconds) {
+        this.durationInSeconds = durationInSeconds;
+    }
+
+    // get set 추가 .
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -28,6 +40,12 @@ public class TimerLogEntry {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+
+    @Override
+    public String toString() {
+        return "시작 시간: " + startTime + ", 종료 시간: " + endTime + ", 공부 시간: " + durationInSeconds + "초";
     }
 
 

@@ -4,10 +4,11 @@ import java.net.URL;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.util.Duration;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javafx.animation.ParallelTransition;
@@ -21,13 +22,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 
 
-
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import com.sm.study_manager.TimerLogEntry;
+
+
+
 
 
 public class TimerController extends CommonController implements Initializable {
@@ -86,45 +86,25 @@ public class TimerController extends CommonController implements Initializable {
     @FXML
     private void start(ActionEvent event) {  // 시작
         currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue() , secondsInput.getValue());
+        // 현재 흘러야하는 초 값넣은것 다 갖고와서 바꿔주기
+
         hoursInput.setValue(0);
         minutesInput.setValue(0);
         secondsInput.setValue(0);
+
+        // 인풋값 0으로 초기화
 
         currentStartTime = LocalDateTime.now(); // 시작 시간 기록
 
         scrollUp(); // 시작버튼 누르면 실행
     }
 
-//    void startCountdown() {
-//        thrd = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    while(currSeconds >= 0) {
-//                        if (!isPaused) {    // 처음에 false 였다가 누르면 true 라서 여기 진행안됨.
-//                            Platform.runLater(() -> setOutput());
-//                            currSeconds -= 1;
-//                            temp += 1;
-//                        }
-//                        Thread.sleep(1000); // 항상 1초마다 잠시 멈춥니다.
-//                    }
-//                    Platform.runLater(() -> {   // 시간이 0보다작아지면
-//                        updateTotalStudyTimeLabel();     // 흐른시간을 위 라벨에 더해주고
-//                        temp = 0;   // 타이머 흐른 시간 0 으로초기화
-//                        scrollDown();   // 시간 정하는 화면으로 전환
-//                    });
-//                } catch (InterruptedException e) {
-//                    System.out.println("스레드가 중단됨: " + e);
-//                }
-//            }
-//        });
-//        thrd.start();
-//    }
+
 
     void startCountdown() {
         thrd = new Thread(() -> {
             try {
-                while (currSeconds > 0) { // >= 대신 > 사용
+                while (currSeconds > 0) {
                     if (!isPaused) {
                         Platform.runLater(this::setOutput);
                         currSeconds--; // 먼저 감소
@@ -147,25 +127,42 @@ public class TimerController extends CommonController implements Initializable {
 
 
     void updateTotalStudyTimeLabel() {
+
         total += temp;
+        Integer writeTemp = temp;   // 기록용
+
         // totalStudyTime 값을 사용하여 라벨 업데이트
         // 예: totalStudyTimeLabel.setText("총 공부 시간: " + totalStudyTime + "초");
         totalStudyTime.setText(total + "초");
 
         LocalDateTime endTime = LocalDateTime.now(); // 종료 시간 기록
-        logEntries.add(new TimerLogEntry(currentStartTime, endTime)); // 로그에 추가 생성자 편집
+        logEntries.add(new TimerLogEntry(currentStartTime, endTime, temp)); // 여기에서 temp를 전달합니다.
+
+        // temp = 흐른 초 까지 전달
 
         updateLogDisplay();     // 리스트뷰에 업데이트 ..
     }
 
-
-    //     로그 계속 업데이트 해주는 함수
     private void updateLogDisplay() {
-      
-        timerLogView.getItems().clear();        // 새로고침
-        for (TimerLogEntry entry : logEntries) {    //  // logEntries : 로그 타이머 시작시간, 종료시간
-            String logText = "시작시간: " + entry.getStartTime() + ", 종료시간: " + entry.getEndTime();
-            timerLogView.getItems().add(logText);
+        // 포맷터 정의 (소수점 이하 3자리까지 표현)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        timerLogView.getItems().clear(); // 기존 로그를 클리어
+        for (TimerLogEntry entry : logEntries) {
+            String formattedStartTime = entry.getStartTime().format(formatter);
+            String formattedEndTime = entry.getEndTime().format(formatter);
+
+//            // 여기에서 temp를 시, 분, 초로 변환
+            int hours = entry.getDurationInSeconds() / 3600;
+            int minutes = (entry.getDurationInSeconds() % 3600) / 60;
+            int seconds = entry.getDurationInSeconds() % 60;
+
+            // 포맷된 공부 시간 문자열 생성
+            String studyDurationFormatted = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
+
+            // 로그 텍스트에 공부 시간을 추가
+            String logText = "시작시간: " + formattedStartTime + ", 종료시간: " + formattedEndTime + ", 공부시간: " + studyDurationFormatted;
+            timerLogView.getItems().add(logText); // 포맷된 텍스트를 추가
         }
     }
 
@@ -182,19 +179,26 @@ public class TimerController extends CommonController implements Initializable {
 
     }
 
-    
-    
-
-    // Event handler for the cancel button
     @FXML
-    private void unStart(ActionEvent event) {    //취소
-        thrd.stop();    // 스레드멈춤.
-        scrollDown();
+    private void unStart(ActionEvent event) {
+        // 사용자에게 타이머를 정말로 취소할지 확인을 요청하는 대화 상자를 생성합니다.
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("타이머를 취소하시겠습니까?");
+        alert.setHeaderText("지금까지 공부한 시간이 누적되지않습니다.");
+        alert.setContentText("일시정지를 눌러 휴식하세요");
 
-
+        // 대화 상자를 보여주고 사용자의 응답을 기다립니다.
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // 사용자가 '예'를 선택한 경우, 타이머를 취소하고 temp 값을 초기화합니다.
+            if (thrd != null) {
+                thrd.interrupt(); // 스레드를 안전하게 중단합니다.
+                thrd = null; // 스레드를 null로 설정하여 GC가 수집할 수 있도록 합니다.
+            }
+            temp = 0; // temp 값을 초기화합니다.
+            scrollDown(); // 스크롤 다운 메서드를 호출합니다.
+        }
     }
-
-
 
     @FXML
     private void toggleTime(ActionEvent event) {
@@ -210,7 +214,6 @@ public class TimerController extends CommonController implements Initializable {
     }
     // 전부 초로 바꿔준다.
 
-//     5분50초 경 보면됨.
     LinkedList<Integer> secondsToHms(Integer currSeconds){
         Integer hours = currSeconds / 3600;
         currSeconds = currSeconds % 3600;
