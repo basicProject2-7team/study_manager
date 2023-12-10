@@ -4,12 +4,11 @@ import java.net.URL;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.scene.control.ListView;
 import javafx.util.Duration;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -27,6 +26,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+
+import com.sm.study_manager.TimerLogEntry;
 
 
 public class TimerController extends CommonController implements Initializable {
@@ -65,6 +66,8 @@ public class TimerController extends CommonController implements Initializable {
     @FXML
     private Button startButton;     // 시작버튼
 
+    @FXML
+    private ListView timerLogView;  // 시작시간, 종료시간, 기록 하는데 필요
     Map<Integer, String> numberMap; // 뭐에쓰는거지??
 
     Thread thrd;
@@ -76,6 +79,9 @@ public class TimerController extends CommonController implements Initializable {
 
     private volatile boolean isPaused = false; // 일시정지 상태 추적
 
+    private List<TimerLogEntry> logEntries = new LinkedList<>();    // 로그 타이머 시작시간, 종료시간
+
+    private LocalDateTime currentStartTime; // 시작시간 기록
     // Event handler for the start button
     @FXML
     private void start(ActionEvent event) {  // 시작
@@ -84,42 +90,10 @@ public class TimerController extends CommonController implements Initializable {
         minutesInput.setValue(0);
         secondsInput.setValue(0);
 
+        currentStartTime = LocalDateTime.now(); // 시작 시간 기록
+
         scrollUp(); // 시작버튼 누르면 실행
     }
-
-
-//    void startCountdown() {
-//        thrd = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    while(currSeconds >= 0) {
-//                        Platform.runLater(() -> setOutput()); // UI 업데이트를 FX 스레드에서 실행
-//                        Thread.sleep(1000);
-//                        currSeconds -= 1;
-//                        temp += 1; // 경과 시간 증가 일단 총 시간
-//
-//
-//                    }
-//
-//                        Platform.runLater(() -> {
-//                            updateTotalStudyTimeLabel();
-//                            temp = 0;   // 임시로 지금 흐른시간 0 초로 다시돌려줌.
-//                            scrollDown(); // FX 스레드에서 UI 업데이트
-//                            thrd.stop();
-//                            System.out.println("피니시");
-//                        });
-//
-//
-//                } catch (InterruptedException e) {
-//                    System.out.println("스레드가 중단됨: " + e);
-//                } catch (Exception e) {
-//                    System.out.println("오류: " + e);
-//                }
-//            }
-//        });
-//        thrd.start();
-//    }
 
     void startCountdown() {
         thrd = new Thread(new Runnable() {
@@ -151,6 +125,22 @@ public class TimerController extends CommonController implements Initializable {
         // totalStudyTime 값을 사용하여 라벨 업데이트
         // 예: totalStudyTimeLabel.setText("총 공부 시간: " + totalStudyTime + "초");
         totalStudyTime.setText(total + "초");
+
+        LocalDateTime endTime = LocalDateTime.now(); // 종료 시간 기록
+        logEntries.add(new TimerLogEntry(currentStartTime, endTime)); // 로그에 추가 생성자 편집
+
+        updateLogDisplay();     // 리스트뷰에 업데이트 ..
+    }
+
+
+    //     로그 계속 업데이트 해주는 함수
+    private void updateLogDisplay() {
+        // timerLogView라는 ListView 가 있다고 가정
+        timerLogView.getItems().clear();
+        for (TimerLogEntry entry : logEntries) {
+            String logText = "Started at: " + entry.getStartTime() + ", Ended at: " + entry.getEndTime();
+            timerLogView.getItems().add(logText);
+        }
     }
 
     // 이건 왜?
@@ -166,6 +156,8 @@ public class TimerController extends CommonController implements Initializable {
 
     }
 
+    
+    
 
     // Event handler for the cancel button
     @FXML
