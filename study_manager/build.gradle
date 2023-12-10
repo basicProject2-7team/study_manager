@@ -36,15 +36,9 @@ javafx {
 
 dependencies {
   implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
-  // MongoDB Java driver
-  implementation 'org.mongodb:mongodb-driver-sync:4.4.0'
 
-  
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-
-
-
 }
 
 test {
