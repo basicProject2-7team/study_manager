@@ -67,7 +67,7 @@ public class TimerController extends CommonController implements Initializable {
     private Button startButton;     // 시작버튼
 
     @FXML
-    private ListView timerLogView;  // 시작시간, 종료시간, 기록 하는데 필요
+    private ListView timerLogView;  // 시작시간, 종료시간, 기록 하는데 필요한 리스트뷰
     Map<Integer, String> numberMap; // 뭐에쓰는거지??
 
     Thread thrd;
@@ -95,31 +95,57 @@ public class TimerController extends CommonController implements Initializable {
         scrollUp(); // 시작버튼 누르면 실행
     }
 
+//    void startCountdown() {
+//        thrd = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    while(currSeconds >= 0) {
+//                        if (!isPaused) {    // 처음에 false 였다가 누르면 true 라서 여기 진행안됨.
+//                            Platform.runLater(() -> setOutput());
+//                            currSeconds -= 1;
+//                            temp += 1;
+//                        }
+//                        Thread.sleep(1000); // 항상 1초마다 잠시 멈춥니다.
+//                    }
+//                    Platform.runLater(() -> {   // 시간이 0보다작아지면
+//                        updateTotalStudyTimeLabel();     // 흐른시간을 위 라벨에 더해주고
+//                        temp = 0;   // 타이머 흐른 시간 0 으로초기화
+//                        scrollDown();   // 시간 정하는 화면으로 전환
+//                    });
+//                } catch (InterruptedException e) {
+//                    System.out.println("스레드가 중단됨: " + e);
+//                }
+//            }
+//        });
+//        thrd.start();
+//    }
+
     void startCountdown() {
-        thrd = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while(currSeconds >= 0) {
-                        if (!isPaused) {    // 처음에 false 였다가 누르면 true 라서 여기 진행안됨.
-                            Platform.runLater(() -> setOutput());
-                            currSeconds -= 1;
-                            temp += 1;
-                        }
-                        Thread.sleep(1000); // 항상 1초마다 잠시 멈춥니다.
+        thrd = new Thread(() -> {
+            try {
+                while (currSeconds > 0) { // >= 대신 > 사용
+                    if (!isPaused) {
+                        Platform.runLater(this::setOutput);
+                        currSeconds--; // 먼저 감소
+                        temp++;
                     }
-                    Platform.runLater(() -> {   // 시간이 0보다작아지면
-                        updateTotalStudyTimeLabel();     // 흐른시간을 위 라벨에 더해주고
-                        temp = 0;   // 타이머 흐른 시간 0 으로초기화
-                        scrollDown();   // 시간 정하는 화면으로 전환
-                    });
-                } catch (InterruptedException e) {
-                    System.out.println("스레드가 중단됨: " + e);
+                    Thread.sleep(1000); // 그 후에 대기
                 }
+                Platform.runLater(() -> { // 0에 도달하면
+                    updateTotalStudyTimeLabel(); // 흐른 시간 업데이트
+                    temp = 0; // 임시 시간 초기화
+                    scrollDown(); // 다운 스크롤
+                });
+            } catch (InterruptedException e) {
+                System.out.println("스레드가 중단됨: " + e);
+                Thread.currentThread().interrupt(); // 스레드 인터럽트 상태를 설정
             }
         });
         thrd.start();
     }
+
+
     void updateTotalStudyTimeLabel() {
         total += temp;
         // totalStudyTime 값을 사용하여 라벨 업데이트
@@ -135,10 +161,10 @@ public class TimerController extends CommonController implements Initializable {
 
     //     로그 계속 업데이트 해주는 함수
     private void updateLogDisplay() {
-        // timerLogView라는 ListView 가 있다고 가정
-        timerLogView.getItems().clear();
-        for (TimerLogEntry entry : logEntries) {
-            String logText = "Started at: " + entry.getStartTime() + ", Ended at: " + entry.getEndTime();
+      
+        timerLogView.getItems().clear();        // 새로고침
+        for (TimerLogEntry entry : logEntries) {    //  // logEntries : 로그 타이머 시작시간, 종료시간
+            String logText = "시작시간: " + entry.getStartTime() + ", 종료시간: " + entry.getEndTime();
             timerLogView.getItems().add(logText);
         }
     }
