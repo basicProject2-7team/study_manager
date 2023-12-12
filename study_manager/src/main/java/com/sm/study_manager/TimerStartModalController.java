@@ -66,20 +66,13 @@ public class TimerStartModalController {
     public void initialize()   {
         // ListView에 CheckBoxListCell을 사용하도록 설정
         listView.setCellFactory(lv -> new CheckBoxListCell());  // lv 가 뭔지모르겠음 아 list view ?
-
+        // 이건 로컬에서 갖고오기
         // music 폴더 내의 모든 파일을 ListView에 추가합니다.
         loadMusicFiles();
-        // 예시 데이터를 ListView에 추가
-//        listView.getItems().addAll("lol_madmovie_music.mp3", "another_song.mp3", "more_music.mp3",
-//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-//                "lol_madmovie_music.mp3");
-        // 실제 애플리케이션에서는 파일 목록을 동적으로 가져오거나 사용자 입력을 받을 수 있습니다.
 
-        // 이건 로컬에서 갖고오기 ??
 
-        // 이코드 편집해서 resources 폴더안에 music 폴더안에 파일들의 이름을 위처럼 갖고오는 코드
+
+
     }
 
 

@@ -7,8 +7,8 @@
    <children>
       <HBox layoutY="1.0" prefHeight="37.0" prefWidth="246.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="55.0" prefWidth="124.0" text="음악 파일" />
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="121.0" text="유튜브 링크" />
+            <Button fx:id="fileButton" mnemonicParsing="false" onAction="#moveFileList" prefHeight="55.0" prefWidth="124.0" text="음악 파일" />
+            <Button fx:id="linkButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#moveLinkList" prefHeight="41.0" prefWidth="121.0" text="유튜브 링크" />
          </children></HBox>
       <Button fx:id="selectButton" layoutX="97.0" layoutY="358.0" mnemonicParsing="false" onAction="#selectStart" text="시작" />
       <ListView fx:id="listView" layoutX="23.0" layoutY="46.0" prefHeight="300.0" prefWidth="201.0" />
