@@ -4,6 +4,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 
+// 그 체크박스 리스트 UI 만드느라 지피티한테 부탁했더니 일단 이렇게 ,,,,
 public class CheckBoxListCell extends ListCell<String> {
     private final CheckBox checkBox = new CheckBox();
 
