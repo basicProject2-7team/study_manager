@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -35,9 +36,7 @@ import com.sm.study_manager.TimerLogEntry;
 //import javax.print.attribute.standard.Media;
 
 
-
-
-
+import com.sm.study_manager.TimerStartModalController;  // 모달 창 컨트롤러 import 해줘야하나?
 
 // 여기 잘 못불러오네
 
@@ -48,7 +47,7 @@ public class TimerController extends CommonController implements Initializable {
 
 
     @FXML
-    private  Label totalStudyTime;
+    private Label totalStudyTime;
     // 오늘 공부한 총 시간이고,  흐르는 시간에 원래는 - 되지만 totalStudyTime 에 += 1
     @FXML
     private AnchorPane timerPane;
@@ -82,26 +81,32 @@ public class TimerController extends CommonController implements Initializable {
     private ListView timerLogView;  // 시작시간, 종료시간, 기록 하는데 필요한 리스트뷰
     Map<Integer, String> numberMap; // 뭐에쓰는거지??
 
-    Thread thrd;
+    Thread thrd;    // 시간 흐르는 스레드
     Integer currSeconds;    // 현재 전체 입력한 시간몇초인지.
 
     Integer total = 0;  //
 
     Integer temp = 0;   // 이게 임시로 0으로 되야됨 한번 넣으면 그치
 
-    private volatile boolean isPaused = false; // 일시정지 상태 추적
+    private volatile boolean isPaused = false; // 일시정지 상태 추적 첨 false 니까 faslse 가 재생 // true 가 멈춤
 
     private List<TimerLogEntry> logEntries = new LinkedList<>();    // 로그 타이머 시작시간, 종료시간
 
     private LocalDateTime currentStartTime; // 시작시간 기록
     // Event handler for the start button
 
+    // 클래스 멤버 변수로 MediaPlayer 추가
+    TimerStartModalController Modalcontroller;
+    private MediaPlayer mediaPlayer;
+
+    // 종료버튼눌러 종료하거나, 0이되거나 하면 음악이 종료되고
+    // 일시정지 버튼을 누르면 stop() 했다가 다시 실행되게 해야함.
 
 
     @FXML
     private void start(ActionEvent event) {  // 시작버튼 이벤트 핸들러
 
-        currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue() , secondsInput.getValue());
+        currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue(), secondsInput.getValue());
         // 현재 흘러야하는 초 값넣은것 다 갖고와서 바꿔주기
 
         hoursInput.setValue(0);
@@ -117,21 +122,13 @@ public class TimerController extends CommonController implements Initializable {
         // 모달창 꺼지면 재생된다 음악이..
 
 
-        // 사운드 파일의 URL을 가져옵니다.
-//                        URL resource = getClass().getResource("C:/Users/bab85/OneDrive/문서/basicProject");
-//        URL resource = getClass().getResource("infinityJourney.mp3");
-//        try {
-//            System.out.println(resource);
-//            Media sound = new Media(resource.toString());
-//            MediaPlayer mediaPlayer = new MediaPlayer(sound);
-//            mediaPlayer.play();
-//        }catch(Exception e){
-//            System.out.println("무슨에러" + e);
-//        }
-
         currentStartTime = LocalDateTime.now(); // 시작 시간 기록
 
-        scrollUp(); // 시작버튼 누르면 실행
+        scrollUp(); // 시간흐르는 창으로 변하고 , 초 카운트
+
+        // 그후에
+        this.mediaPlayer = Modalcontroller.getMediaPlayer();
+        System.out.println("플레이어도 확인." + this.mediaPlayer); // 플레이어도 확인.
     }
 
     // 모달창 띄워주는 함수이고요
@@ -140,8 +137,14 @@ public class TimerController extends CommonController implements Initializable {
         try {
             // 모달 창 FXML 파일 로드
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerStartModalView.fxml")); // 음악선택뷰
-            // TimerStartModalView.fxml 갖고와서 띄우기??
-            Parent parent = fxmlLoader.load();
+            Parent parent = fxmlLoader.load();  // 이건왜하는거지?
+            // 이 호출이 컨트롤러 인스턴스를 생성합니다.
+
+            // 모달 창을 표시하기 전에 mediaPlayer를 TimerStartModalController에서 가져옵니다.
+            Modalcontroller = fxmlLoader.getController();    // 전역변수 
+
+            System.out.println("controller 잘갖고왔는지?" + Modalcontroller);// controller 잘갖고왔는지?
+
 
             // 새로운 Scene 생성
             Scene scene = new Scene(parent);
@@ -158,7 +161,7 @@ public class TimerController extends CommonController implements Initializable {
         }
     }
 
-
+    // 숫자1 씩 줄어듦 스레드로
     void startCountdown() {
         thrd = new Thread(() -> {
             try {
@@ -191,18 +194,26 @@ public class TimerController extends CommonController implements Initializable {
     void updateTotalStudyTimeLabel() {
 
         total += temp;
-        Integer writeTemp = temp;   // 기록용
+//        Integer writeTemp = temp;   // 기록용
 
         // totalStudyTime 값을 사용하여 라벨 업데이트
-        // 예: totalStudyTimeLabel.setText("총 공부 시간: " + totalStudyTime + "초");
+
         totalStudyTime.setText(total + "초");
 
         LocalDateTime endTime = LocalDateTime.now(); // 종료 시간 기록
+
+        // 타이머가 종료되면 음악 재생 중지
+        if (mediaPlayer != null) {  // null 이 아니라면
+            Modalcontroller.shutDown(mediaPlayer);
+        }
+
         logEntries.add(new TimerLogEntry(currentStartTime, endTime, temp)); // 여기에서 temp를 전달합니다.
 
         // temp = 흐른 초 까지 전달
 
         updateLogDisplay();     // 리스트뷰에 업데이트 ..
+
+
     }
 
     private void updateLogDisplay() {
@@ -254,6 +265,12 @@ public class TimerController extends CommonController implements Initializable {
                 thrd = null; // 스레드를 null로 설정하여 GC가 수집할 수 있도록 합니다.
             }
             temp = 0; // temp 값을 초기화합니다.
+
+            // 취소 버튼을 눌렀을 때 음악 재생 중지
+            if (mediaPlayer != null) {
+                Modalcontroller.shutDown(mediaPlayer);
+            }
+
             scrollDown(); // 스크롤 다운 메서드를 호출합니다.
         }
     }
@@ -261,21 +278,28 @@ public class TimerController extends CommonController implements Initializable {
     @FXML
     private void toggleTime(ActionEvent event) {
         isPaused = !isPaused; // 일시정지 상태를 전환
+        // 퍼즈 상태를 트루 펄스 바꿔줌
+        if (isPaused) {   // true 면 멈춤
+            mediaPlayer.stop();
+        }
+        if (!isPaused) {   // true 면 멈춤
+            mediaPlayer.play();
+        }
     }
 
 
-    Integer hmsToSeconds(Integer h , Integer m , Integer s ) {
-        Integer hToSeconds = h* 3600;
-        Integer mToSecodns = m*60;
+    Integer hmsToSeconds(Integer h, Integer m, Integer s) {
+        Integer hToSeconds = h * 3600;
+        Integer mToSecodns = m * 60;
         Integer total = hToSeconds + mToSecodns + s;
         return total;
     }
     // 전부 초로 바꿔준다.
 
-    LinkedList<Integer> secondsToHms(Integer currSeconds){
+    LinkedList<Integer> secondsToHms(Integer currSeconds) {
         Integer hours = currSeconds / 3600;
         currSeconds = currSeconds % 3600;
-        Integer minutes = currSeconds /60;
+        Integer minutes = currSeconds / 60;
         currSeconds = currSeconds % 60;
         Integer seconds = currSeconds;
         LinkedList<Integer> answer = new LinkedList<>();
@@ -284,8 +308,6 @@ public class TimerController extends CommonController implements Initializable {
         answer.add(seconds);
         return answer;
     }
-
-
 
 
     // 스크롤 애니메이션 할건가? 다른방식은없나?
@@ -301,15 +323,6 @@ public class TimerController extends CommonController implements Initializable {
         tr1.setToY(0);
         tr1.setNode(menuPane);
 
-//        fadeOut.setFromValue(1.0);
-//        fadeOut.setToValue(0.0);
-//        fadeOut.setNode(menuPane);
-
-//        FadeTransition fadeIn = new FadeTransition(Duration.millis(100));
-//        fadeIn.setFromValue(0.0);
-//        fadeIn.setToValue(1.0);
-//        fadeOut.setNode(timerPane);
-
 
         TranslateTransition tr2 = new TranslateTransition();
         tr2.setDuration(Duration.millis(100));
@@ -319,12 +332,12 @@ public class TimerController extends CommonController implements Initializable {
         tr2.setToY(0);
         tr2.setNode(timerPane);
         ParallelTransition pt = new ParallelTransition(tr1, tr2);
-        pt.setOnFinished(e->{
+        pt.setOnFinished(e -> {
             try {
                 System.out.println("Start Countdown");
                 startCountdown();   // 여기서 스레드시작
 
-            }catch(Exception e2){
+            } catch (Exception e2) {
                 //
 
             }
@@ -351,21 +364,10 @@ public class TimerController extends CommonController implements Initializable {
         tr2.setToY(0);
         tr2.setNode(menuPane);
         ParallelTransition pt = new ParallelTransition(tr1, tr2);
-//        pt.setOnFinished(e->{
-//            try {
-//                System.out.println("Start Countdown");
-//                thrd.stop();
-//
-//            }catch(Exception e2){
-//                System.out.println("에러" + e2);
-//
-//            }
-//        });
+
         pt.play();
 
     }
-
-
 
 
     @Override
@@ -373,8 +375,8 @@ public class TimerController extends CommonController implements Initializable {
         ObservableList<Integer> hoursList = FXCollections.observableArrayList();
         ObservableList<Integer> minutesAndSecondsList = FXCollections.observableArrayList();
 
-        for(int i = 0; i<=60 ; i++){
-            if(0 <= i && i <=24) {
+        for (int i = 0; i <= 60; i++) {
+            if (0 <= i && i <= 24) {
                 hoursList.add(Integer.valueOf(i));
             }
             minutesAndSecondsList.add(Integer.valueOf(i));
@@ -392,8 +394,8 @@ public class TimerController extends CommonController implements Initializable {
         // 이런식으로 넣음 0~24 , 0~60 0~60
 
         numberMap = new TreeMap<Integer, String>();
-        for (Integer i = 0; i<=60 ; i++) {
-            if(0<=i && i <=9) {
+        for (Integer i = 0; i <= 60; i++) {
+            if (0 <= i && i <= 9) {
                 numberMap.put(i, "0" + i.toString());
             } else {
                 numberMap.put(i, i.toString());
