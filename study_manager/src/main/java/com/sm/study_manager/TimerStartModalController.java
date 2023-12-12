@@ -17,6 +17,18 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
+//import java.io.File;
+//import java.net.URISyntaxException;
+
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
+// 파일입출력으로 폴더에있는 파일명 리스트에 추가.
 public class TimerStartModalController {
 
     // listView ??
@@ -32,24 +44,44 @@ public class TimerStartModalController {
         return mediaPlayer;
     }
 
+    private void loadMusicFiles() {
+        String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
+        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
+
+        try {
+            List<String> fileNames = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
+                    .filter(Files::isRegularFile) // Stream에서 일반 파일(디렉토리가 아닌 파일)만 필터링합니다.
+                    .map(path -> path.getFileName().toString()) // 각 파일 경로에서 파일 이름만 추출하여 문자열로 변환합니다.
+                    .filter(name -> name.toLowerCase().endsWith(".mp3")) // 파일 이름이 ".mp3"로 끝나는 파일만 필터링합니다.
+                    .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
+
+            listView.getItems().addAll(fileNames); // 가져온 파일 이름 목록을 ListView의 아이템으로 추가합니다.
+        } catch (IOException e) {
+            System.err.println("Error reading music directory: " + e.getMessage()); // 파일 읽기 중 오류가 발생하면 오류 메시지를 출력합니다.
+        }
+    }
+
     // 메디아 플레이어
     @FXML
-    public void initialize() {
+    public void initialize()   {
         // ListView에 CheckBoxListCell을 사용하도록 설정
         listView.setCellFactory(lv -> new CheckBoxListCell());  // lv 가 뭔지모르겠음 아 list view ?
 
+        // music 폴더 내의 모든 파일을 ListView에 추가합니다.
+        loadMusicFiles();
         // 예시 데이터를 ListView에 추가
-        listView.getItems().addAll("lol_madmovie_music.mp3", "another_song.mp3", "more_music.mp3",
-                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
-                "lol_madmovie_music.mp3");
+//        listView.getItems().addAll("lol_madmovie_music.mp3", "another_song.mp3", "more_music.mp3",
+//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
+//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
+//                "lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3","lol_madmovie_music.mp3",
+//                "lol_madmovie_music.mp3");
         // 실제 애플리케이션에서는 파일 목록을 동적으로 가져오거나 사용자 입력을 받을 수 있습니다.
 
         // 이건 로컬에서 갖고오기 ??
 
         // 이코드 편집해서 resources 폴더안에 music 폴더안에 파일들의 이름을 위처럼 갖고오는 코드
     }
+
 
 
     @FXML
@@ -61,6 +93,8 @@ public class TimerStartModalController {
         // 재생 하는 거
         String fileName = "music/infinityJourney.mp3";
 
+
+        // 이걸이제 선택한걸 재생하게
         playHitSound(fileName);
 
 

@@ -155,7 +155,7 @@
       </children>
    </StackPane>
    <Label layoutX="175.0" layoutY="66.0" prefHeight="14.0" prefWidth="105.0" text="Total Study Time : " />
-   <Label fx:id="totalStudyTime" layoutX="374.0" layoutY="66.0" prefHeight="14.0" prefWidth="39.0" text="0" />
+   <Label fx:id="totalStudyTime" layoutX="296.0" layoutY="66.0" prefHeight="14.0" prefWidth="292.0" text="0" />
    <AnchorPane layoutX="7.0" layoutY="354.0" prefHeight="433.0" prefWidth="580.0">
       <children>
          <ListView fx:id="timerLogView" layoutX="14.0" layoutY="14.0" prefHeight="201.0" prefWidth="557.0" />

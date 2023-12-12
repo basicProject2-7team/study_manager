@@ -31,6 +31,7 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.layout.AnchorPane;
 
+
 import com.sm.study_manager.TimerLogEntry;
 
 //import javax.print.attribute.standard.Media;
@@ -49,6 +50,8 @@ public class TimerController extends CommonController implements Initializable {
     @FXML
     private Label totalStudyTime;
     // 오늘 공부한 총 시간이고,  흐르는 시간에 원래는 - 되지만 totalStudyTime 에 += 1
+
+    // 초를 시 분 초로 나오게 해줘야함.
     @FXML
     private AnchorPane timerPane;
 
@@ -194,11 +197,13 @@ public class TimerController extends CommonController implements Initializable {
     void updateTotalStudyTimeLabel() {
 
         total += temp;
-//        Integer writeTemp = temp;   // 기록용
 
-        // totalStudyTime 값을 사용하여 라벨 업데이트
+        // 여기를 이제 시분초로 나오게
+        LinkedList<Integer> totalStudyhms = secondsToHms(total);
+        totalStudyTime.setText((numberMap.get(totalStudyhms.get(0))) + "시"
+                             + (numberMap.get(totalStudyhms.get(1))) + "분"
+                             + (numberMap.get(totalStudyhms.get(2))) + "초");
 
-        totalStudyTime.setText(total + "초");
 
         LocalDateTime endTime = LocalDateTime.now(); // 종료 시간 기록
 
@@ -224,8 +229,7 @@ public class TimerController extends CommonController implements Initializable {
         for (TimerLogEntry entry : logEntries) {
             String formattedStartTime = entry.getStartTime().format(formatter);
             String formattedEndTime = entry.getEndTime().format(formatter);
-
-//            // 여기에서 temp를 시, 분, 초로 변환
+            // 여기에서 temp를 시, 분, 초로 변환
             int hours = entry.getDurationInSeconds() / 3600;
             int minutes = (entry.getDurationInSeconds() % 3600) / 60;
             int seconds = entry.getDurationInSeconds() % 60;
