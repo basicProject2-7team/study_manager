@@ -1,10 +1,16 @@
 package com.sm.study_manager;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.time.LocalDateTime;
@@ -26,8 +32,14 @@ import javafx.scene.layout.AnchorPane;
 
 import com.sm.study_manager.TimerLogEntry;
 
+//import javax.print.attribute.standard.Media;
 
 
+
+
+
+
+// 여기 잘 못불러오네
 
 
 public class TimerController extends CommonController implements Initializable {
@@ -83,8 +95,12 @@ public class TimerController extends CommonController implements Initializable {
 
     private LocalDateTime currentStartTime; // 시작시간 기록
     // Event handler for the start button
+
+
+
     @FXML
-    private void start(ActionEvent event) {  // 시작
+    private void start(ActionEvent event) {  // 시작버튼 이벤트 핸들러
+
         currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue() , secondsInput.getValue());
         // 현재 흘러야하는 초 값넣은것 다 갖고와서 바꿔주기
 
@@ -94,21 +110,67 @@ public class TimerController extends CommonController implements Initializable {
 
         // 인풋값 0으로 초기화
 
+        // 여기서 모달창 띄워야함.
+        showModalWindow();
+
+
+        // 모달창 꺼지면 재생된다 음악이..
+
+
+        // 사운드 파일의 URL을 가져옵니다.
+//                        URL resource = getClass().getResource("C:/Users/bab85/OneDrive/문서/basicProject");
+//        URL resource = getClass().getResource("infinityJourney.mp3");
+//        try {
+//            System.out.println(resource);
+//            Media sound = new Media(resource.toString());
+//            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+//            mediaPlayer.play();
+//        }catch(Exception e){
+//            System.out.println("무슨에러" + e);
+//        }
+
         currentStartTime = LocalDateTime.now(); // 시작 시간 기록
 
         scrollUp(); // 시작버튼 누르면 실행
     }
 
+    // 모달창 띄워주는 함수이고요
+    //TimerStartModalView.fxml
+    private void showModalWindow() {
+        try {
+            // 모달 창 FXML 파일 로드
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerStartModalView.fxml")); // 음악선택뷰
+            // TimerStartModalView.fxml 갖고와서 띄우기??
+            Parent parent = fxmlLoader.load();
+
+            // 새로운 Scene 생성
+            Scene scene = new Scene(parent);
+
+            // 새로운 Stage(모달 창) 생성
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL); // 모달 창으로 설정
+            stage.setTitle("음악 선택창"); // 모달 창의 제목 설정
+            stage.setScene(scene); // Stage에 Scene 설정   이런식으로 씬을 갖고옴 fxml 파일
+            stage.showAndWait(); // 모달 창을 표시하고 사용자의 입력을 기다림
+            // 다른 밑에 컴포넌트 사용 못하게.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     void startCountdown() {
         thrd = new Thread(() -> {
             try {
                 while (currSeconds > 0) {
-                    if (!isPaused) {
+                    if (!isPaused) {        // 일시정지/ 재개 버튼 눌렸으면
                         Platform.runLater(this::setOutput);
                         currSeconds--; // 먼저 감소
                         temp++;
+                        if (currSeconds < 6) {
+//                            // 6보다 작다면 5초전에 삐비빅 해서 알람
+                            java.awt.Toolkit.getDefaultToolkit().beep();
+                        }
                     }
                     Thread.sleep(1000); // 그 후에 대기
                 }
@@ -145,7 +207,7 @@ public class TimerController extends CommonController implements Initializable {
 
     private void updateLogDisplay() {
         // 포맷터 정의 (소수점 이하 3자리까지 표현)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'     'HH:mm:ss");
 
         timerLogView.getItems().clear(); // 기존 로그를 클리어
         for (TimerLogEntry entry : logEntries) {
@@ -161,7 +223,7 @@ public class TimerController extends CommonController implements Initializable {
             String studyDurationFormatted = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
 
             // 로그 텍스트에 공부 시간을 추가
-            String logText = "시작시간: " + formattedStartTime + ", 종료시간: " + formattedEndTime + ", 공부시간: " + studyDurationFormatted;
+            String logText = "[시작시간]  " + formattedStartTime + ", [종료시간]  " + formattedEndTime + ", [공부시간] " + studyDurationFormatted;
             timerLogView.getItems().add(logText); // 포맷된 텍스트를 추가
         }
     }
@@ -169,14 +231,10 @@ public class TimerController extends CommonController implements Initializable {
     // 이건 왜?
     void setOutput() {
         LinkedList<Integer> currHms = secondsToHms(currSeconds);    // 현재입력받은 것인데 linkedList 로 시분초 012 ㅇㅇ
-
-        System.out.println(currHms.get(0) + "-" + currHms.get(1) + " - " + currHms.get(2)); // 이거 왜쓰는거지
-
-        hoursTimer.setText(numberMap.get(currHms.get(0)));
+        System.out.println(currHms.get(0) + "-" + currHms.get(1) + " - " + currHms.get(2)); // 시간 잘찍히는지 확인
+        hoursTimer.setText(numberMap.get(currHms.get(0)));      // 시 분 초 업데이트
         minutesTimer.setText(numberMap.get(currHms.get(1)));
         secondsTimer.setText(numberMap.get(currHms.get(2)));
-
-
     }
 
     @FXML
