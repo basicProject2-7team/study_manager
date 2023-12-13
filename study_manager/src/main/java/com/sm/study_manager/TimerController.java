@@ -321,7 +321,7 @@ public class TimerController extends CommonController implements Initializable {
     void scrollUp() {       //시작버튼 누르면실행 x가 가로니까 x를
 
         // 트랜스레이션 생성
-//        FadeTransition fadeOut = new FadeTransition(Duration.millis(100));
+
         TranslateTransition tr1 = new TranslateTransition();
         tr1.setDuration(Duration.millis(100));
         tr1.setToX(0);
@@ -355,8 +355,6 @@ public class TimerController extends CommonController implements Initializable {
 
     void scrollDown() {
         // 트랜스레이션 생성
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(100), menuPane);
-
         TranslateTransition tr1 = new TranslateTransition();
         tr1.setDuration(Duration.millis(100));
         tr1.setToX(-1000);
