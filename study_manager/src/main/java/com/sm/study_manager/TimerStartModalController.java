@@ -2,12 +2,14 @@ package com.sm.study_manager;
 
 // 모달창 리스트뷰를 컨트롤 ,, 버튼 누르면 창꺼지게 해놓자 일단.
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -15,6 +17,8 @@ import java.io.File;
 // 이 체크박스 아니고
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Callback;
+
 import java.net.URL;
 
 //import java.io.File;
@@ -34,7 +38,7 @@ public class TimerStartModalController {
 
     // listView ??
     @FXML
-    private ListView<String> listView; // FXML에서 정의한 ListView와 연결
+    private ListView<ListItem> listView; // 이제 ListView는 ListItem 객체를 처리합니다.
 
     @FXML
     private Button selectButton;
@@ -52,31 +56,62 @@ public class TimerStartModalController {
         return mediaPlayer;
     }
 
-    private void loadMusicFiles() {
-        String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
-        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
-
-        try {
-            List<String> fileNames = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
-                    .filter(Files::isRegularFile) // Stream에서 일반 파일(디렉토리가 아닌 파일)만 필터링합니다.
-                    .map(path -> path.getFileName().toString()) // 각 파일 경로에서 파일 이름만 추출하여 문자열로 변환합니다.
-                    .filter(name -> name.toLowerCase().endsWith(".mp3")) // 파일 이름이 ".mp3"로 끝나는 파일만 필터링합니다.
-                    .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
-
-            listView.getItems().addAll(fileNames); // 가져온 파일 이름 목록을 ListView의 아이템으로 추가합니다.
-        } catch (IOException e) {
-            System.err.println("Error reading music directory: " + e.getMessage()); // 파일 읽기 중 오류가 발생하면 오류 메시지를 출력합니다.
-        }
-    }
+//    private void loadMusicFiles() {
+//        String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
+//        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
+//
+//        try {
+//            List<String> fileNames = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
+//                    .filter(Files::isRegularFile) // Stream에서 일반 파일(디렉토리가 아닌 파일)만 필터링합니다.
+//                    .map(path -> path.getFileName().toString()) // 각 파일 경로에서 파일 이름만 추출하여 문자열로 변환합니다.
+//                    .filter(name -> name.toLowerCase().endsWith(".mp3")) // 파일 이름이 ".mp3"로 끝나는 파일만 필터링합니다.
+//                    .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
+//
+//            listView.getItems().addAll(fileNames); // 가져온 파일 이름 목록을 ListView의 아이템으로 추가합니다.
+//        } catch (IOException e) {
+//            System.err.println("Error reading music directory: " + e.getMessage()); // 파일 읽기 중 오류가 발생하면 오류 메시지를 출력합니다.
+//        }
+//    }
     // 이거는 잘 갖고옴 근데 선택된 파일이름 리스트 잘 못갖고옴...
+private void loadMusicFiles() {
+    String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
+    Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
 
+    try {
+        List<ListItem> items = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
+                .filter(Files::isRegularFile) // 일반 파일만 필터링합니다.
+                .map(path -> path.getFileName().toString()) // 파일 이름을 문자열로 변환합니다.
+                .filter(name -> name.toLowerCase().endsWith(".mp3")) // ".mp3"로 끝나는 파일만 필터링합니다.
+                .map(ListItem::new) // 파일 이름을 이용하여 ListItem 객체를 생성합니다.
+                .collect(Collectors.toList()); // 결과를 List<ListItem>으로 수집합니다.
+
+        listView.getItems().addAll(items); // 변환된 ListItem 객체 목록을 ListView에 추가합니다.
+    } catch (IOException e) {
+        System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
+    }
+}
     // 메디아 플레이어
     @FXML
     public void initialize()   {
+
+
+
         // ListView에 CheckBoxListCell을 사용하도록 설정
-        listView.setCellFactory(lv -> new CheckBoxListCell());  // lv 가 뭔지모르겠음 아 list view ?
-        // 이건 로컬에서 갖고오기
-        // music 폴더 내의 모든 파일을 ListView에 추가합니다.
+        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<ListItem, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(ListItem item) {
+                return item.checkedProperty();
+            }
+        }));
+
+
+
+
+
+
+
+
+
         loadMusicFiles();
 
 
@@ -87,23 +122,23 @@ public class TimerStartModalController {
 
 
     @FXML
-    private void selectStart(ActionEvent event) {  // 모달 창에서 시작버튼 눌렀을때!!! 인데 지금 선택된 파일 재생시키려고하는데 잘안도미.
+    private void selectStart(ActionEvent event) {
+        // 모달 창에서 시작버튼 눌렀을때!!! 인데 지금 선택된 파일 재생시키려고하는데 잘안도미.
         // 음악 파일 선택한거 재생 어떻게하지,,?
-
+        // ListView에서 선택된 ListItem 객체를 가져옵니다.
+        ListItem selectedItem = listView.getSelectionModel().getSelectedItem();
         // ListView에서 선택된 항목을 가져옵니다.
-        String selectedFile = listView.getSelectionModel().getSelectedItem();
-        System.out.println("ListView <- SelectedFile ::" + selectedFile);
-        // 이게 null 나옴
-//        System.out.println("ListView <- : " + listView);
-//        System.out.println(" listView.getSelectionModel() :: " + listView.getSelectionModel()); // 여기는 에러안나네
+
+
 
         // 선택된 항목이 있다면, 해당 파일을 재생합니다.
-        if (selectedFile != null) {
+        if (selectedItem  != null) {
+            String selectedFileName  = selectedItem.getText();
             // 사용자의 홈 디렉토리 내 music 폴더의 경로를 기준으로 파일 경로를 생성합니다.
             String userHome = System.getProperty("user.home");
-            Path filePath = Paths.get(userHome, "Music", selectedFile);
+            Path filePath = Paths.get(userHome, "Music", selectedFileName);
 
-            System.out.println("checkFil?" + selectedFile);
+            System.out.println("checkFil?" + selectedFileName);
 
             // 파일이 실제로 존재하는지 확인하고 재생합니다.
             if (Files.exists(filePath)) {
@@ -111,7 +146,7 @@ public class TimerStartModalController {
 
                 System.out.println("file true exist? " + filePath.toUri().toString());
             } else {
-                System.err.println("File not found: " + selectedFile);
+                System.err.println("File not found: " + selectedFileName);
             }
         }
 
