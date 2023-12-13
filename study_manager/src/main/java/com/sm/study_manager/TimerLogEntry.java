@@ -2,6 +2,7 @@ package com.sm.study_manager;
 
 import java.time.LocalDateTime;
 
+// 현재시간 시작시간 종료시간 클래스 따로 뺐어요.
 public class TimerLogEntry {
     // 생성자
     public TimerLogEntry(LocalDateTime startTime, LocalDateTime endTime, int durationInSeconds) {
