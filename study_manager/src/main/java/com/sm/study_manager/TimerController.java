@@ -131,7 +131,9 @@ public class TimerController extends CommonController implements Initializable {
 
         // 그후에
         this.mediaPlayer = Modalcontroller.getMediaPlayer();
-        System.out.println("플레이어도 확인." + this.mediaPlayer); // 플레이어도 확인.
+        System.out.println("player Check." + this.mediaPlayer); // 플레이어도 확인.
+
+        // mediaPlayer 가 생겨서 가져옴 /
     }
 
     // 모달창 띄워주는 함수이고요
@@ -139,12 +141,13 @@ public class TimerController extends CommonController implements Initializable {
     private void showModalWindow() {
         try {
             // 모달 창 FXML 파일 로드
+//            모달 창을 여러 번 열고 닫을 때마다 FXMLLoader를 새로 생성하고 있는건가요??
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TimerStartModalView.fxml")); // 음악선택뷰
             Parent parent = fxmlLoader.load();  // 이건왜하는거지?
             // 이 호출이 컨트롤러 인스턴스를 생성합니다.
 
             // 모달 창을 표시하기 전에 mediaPlayer를 TimerStartModalController에서 가져옵니다.
-            Modalcontroller = fxmlLoader.getController();    // 전역변수 
+            Modalcontroller = fxmlLoader.getController();    // 전역변수
 
             System.out.println("controller 잘갖고왔는지?" + Modalcontroller);// controller 잘갖고왔는지?
 
@@ -186,7 +189,7 @@ public class TimerController extends CommonController implements Initializable {
                     scrollDown(); // 다운 스크롤
                 });
             } catch (InterruptedException e) {
-                System.out.println("스레드가 중단됨: " + e);
+                System.out.println("thread out" + e);
                 Thread.currentThread().interrupt(); // 스레드 인터럽트 상태를 설정
             }
         });
@@ -209,7 +212,7 @@ public class TimerController extends CommonController implements Initializable {
 
         // 타이머가 종료되면 음악 재생 중지
         if (mediaPlayer != null) {  // null 이 아니라면
-            Modalcontroller.shutDown(mediaPlayer);
+            mediaPlayer = Modalcontroller.shutDown(mediaPlayer); // 아예 없앰. mediaPlayer 리소스 없애게하려고 이거되나??
         }
 
         logEntries.add(new TimerLogEntry(currentStartTime, endTime, temp)); // 여기에서 temp를 전달합니다.
@@ -272,7 +275,7 @@ public class TimerController extends CommonController implements Initializable {
 
             // 취소 버튼을 눌렀을 때 음악 재생 중지
             if (mediaPlayer != null) {
-                Modalcontroller.shutDown(mediaPlayer);
+                mediaPlayer = Modalcontroller.shutDown(mediaPlayer);
             }
 
             scrollDown(); // 스크롤 다운 메서드를 호출합니다.
