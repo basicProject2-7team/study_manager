@@ -32,7 +32,7 @@
                 <children>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center; -fx-alignment: center;">
                         <children>
-                            <Label fx:id="lbl00" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl00" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <VBox.margin>
                                     <Insets />
                                 </VBox.margin>
@@ -119,7 +119,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="1">
                         <children>
-                            <Label fx:id="lbl10" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl10" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <VBox.margin>
                                     <Insets left="5.0" />
                                 </VBox.margin>
@@ -205,7 +205,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="1">
                         <children>
-                            <Label fx:id="lbl16" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl16" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -219,7 +219,7 @@
                     </VBox>
                     <VBox prefHeight="201000.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="2">
                         <children>
-                            <Label fx:id="lbl20" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl20" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -303,7 +303,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="2">
                         <children>
-                            <Label fx:id="lbl26" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl26" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -317,7 +317,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="3">
                         <children>
-                            <Label fx:id="lbl30" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl30" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -401,7 +401,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="3">
                         <children>
-                            <Label fx:id="lbl36" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl36" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -415,7 +415,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="4">
                         <children>
-                            <Label fx:id="lbl40" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl40" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -499,7 +499,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="4">
                         <children>
-                            <Label fx:id="lbl46" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl46" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <VBox.margin>
                                     <Insets left="5.0" />
                                 </VBox.margin>
@@ -513,7 +513,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="5">
                         <children>
-                            <Label fx:id="lbl50" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl50" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <VBox.margin>
                                     <Insets left="5.0" />
                                 </VBox.margin>
@@ -587,7 +587,7 @@
                     </VBox>
                     <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="5">
                         <children>
-                            <Label fx:id="lbl56" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                            <Label fx:id="lbl56" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
                                 <font>
                                     <Font size="19.0" />
                                 </font>
@@ -744,4 +744,7 @@
             </VBox>
         </top>
     </BorderPane>
+   <Label layoutX="104.0" layoutY="620.0" prefHeight="30.0" prefWidth="372.0" text="2023 -12 -15 suyoil" />
+   <Label layoutX="104.0" layoutY="650.0" prefHeight="30.0" prefWidth="372.0" text="total study time : 8" />
+   <ListView layoutX="97.0" layoutY="680.0" prefHeight="79.0" prefWidth="372.0" />
 </AnchorPane>
