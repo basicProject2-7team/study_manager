@@ -1,11 +1,747 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sm.study_manager.CalenderController">
-    <fx:include source="CommonView.fxml"/>
-    <children>
-        <TextArea fx:id="text" layoutX="200.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" text="캘린더 화면입니다." />
-    </children>
+    <fx:include source="CommonView.fxml" />
+    <BorderPane layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+        <center>
+            <GridPane fx:id="grid" onMousePressed="#clickGrid" prefHeight="620.0" prefWidth="600.0" style="-fx-border-color: BLACK;" BorderPane.alignment="CENTER">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center; -fx-alignment: center;">
+                        <children>
+                            <Label fx:id="lbl00" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <VBox.margin>
+                                    <Insets />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <opaqueInsets>
+                           <Insets />
+                        </opaqueInsets>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1">
+                        <children>
+                            <Label fx:id="lbl01" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2">
+                        <children>
+                            <Label fx:id="lbl02" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3">
+                        <children>
+                            <Label fx:id="lbl03" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5">
+                        <children>
+                            <Label fx:id="lbl05" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6">
+                        <children>
+                            <Label fx:id="lbl06" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl10" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding>
+                            </Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="201000.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl11" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding>
+                            </Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="201000.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl12" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl13" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl14" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl15" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                        <children>
+                            <Label fx:id="lbl16" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="201000.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl20" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl21" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl22" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl23" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl24" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl25" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                        <children>
+                            <Label fx:id="lbl26" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl30" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl31" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl32" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl33" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl34" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl35" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="3">
+                        <children>
+                            <Label fx:id="lbl36" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl40" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl41" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl42" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl43" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl44" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl45" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                        <children>
+                            <Label fx:id="lbl46" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl50" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl51" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl52" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl54" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" top="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding>
+                            </Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl55" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                        <padding>
+                            <Insets top="5.0" />
+                        </padding>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl56" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER" >
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                        <padding>
+                            <Insets top="5.0" />
+                        </padding>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <children>
+                            <Label fx:id="lbl53" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding></Label>
+                        </children>
+                    </VBox>
+                    <VBox prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: white black black white; -fx-border-style: solid; -fx-alignment: center;" GridPane.columnIndex="4">
+                        <children>
+                            <Label fx:id="lbl04" alignment="CENTER" prefWidth="30.0" text="7" textAlignment="CENTER">
+                                <VBox.margin>
+                                    <Insets left="5.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="19.0" />
+                                </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding>
+                            </Label>
+                        </children>
+                    </VBox>
+                </children>
+                <cursor>
+                    <Cursor fx:constant="DEFAULT" />
+                </cursor>
+                <effect>
+                    <Blend />
+                </effect>
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
+            </GridPane>
+        </center>
+        <top>
+            <VBox prefHeight="88.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                <children>
+                    <HBox prefHeight="65.0" prefWidth="600.0" spacing="10.0" style="-fx-border-color: BLACK; -fx-alignment: center;">
+                        <children>
+                            <Button fx:id="btnBMonth" mnemonicParsing="false" onAction="#bMonthClick" prefHeight="62.0" prefWidth="120.0" style="-fx-background-radius: 10;" text="◀">
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Button>
+                            <Button fx:id="btnToday" mnemonicParsing="false" onAction="#todayClick" prefHeight="41.0" prefWidth="199.0" style="-fx-background-radius: 10;" text="TOUCH ME">
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                                <padding>
+                                    <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
+                                </padding>
+                            </Button>
+                            <Button fx:id="btnNMonth" mnemonicParsing="false" onAction="#nMonthClick" prefHeight="62.0" prefWidth="120.0" style="-fx-background-radius: 10;" text="▶">
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Button>
+                        </children>
+                        <padding>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </padding>
+                    </HBox>
+                    <HBox prefHeight="26.0" prefWidth="620.0" spacing="1.0" style="-fx-border-color: GRAY;">
+                        <children>
+                            <Label alignment="CENTER" prefHeight="20.0" prefWidth="88.0" style="-fx-border-color: BLACK;" text="SUN" textFill="#dd0700">
+                                <font>
+                                    <Font name="System Bold" size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefHeight="20.0" prefWidth="88.0" style="-fx-border-color: BLACK;" text="MON">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefHeight="20.0" prefWidth="88.0" style="-fx-border-color: BLACK;" text="TUE">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefWidth="88.0" style="-fx-border-color: BLACK;" text="WED">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefWidth="88.0" style="-fx-border-color: BLACK;" text="THU">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefHeight="20.0" prefWidth="88.0" style="-fx-border-color: BLACK;" text="FRI">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                            <Label alignment="CENTER" prefHeight="20.0" prefWidth="88.0" style="-fx-border-color: BLACK;" text="SAT" textFill="#0b009e">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Label>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+        </top>
+    </BorderPane>
 </AnchorPane>
