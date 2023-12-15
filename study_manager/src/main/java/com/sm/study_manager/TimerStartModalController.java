@@ -132,8 +132,8 @@ public class TimerStartModalController {
                 if (empty || item == null) {
                     setGraphic(null); // 아이템이 없거나 null이면 아무것도 표시하지 않음
                 } else {
-                    if (hyperlink == null) {
-                        hyperlink = new Hyperlink(item);
+                    if (hyperlink == null) {    // 하이퍼링크가 null 이면?
+                        hyperlink = new Hyperlink(item);    // 하이퍼링크를 string Item 주고
                         hyperlink.setOnAction(e -> handleHyperlinkAction(item)); // 하이퍼링크 클릭 이벤트 처리
                     }
                     setGraphic(hyperlink); // Hyperlink를 셀의 그래픽으로 설정

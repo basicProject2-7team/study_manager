@@ -14,6 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -38,6 +39,8 @@ import com.sm.study_manager.TimerLogEntry;
 
 
 import com.sm.study_manager.TimerStartModalController;  // 모달 창 컨트롤러 import 해줘야하나?
+
+import static com.sm.study_manager.DBConnector.selectTotalTime;
 
 // 여기 잘 못불러오네
 
@@ -151,7 +154,6 @@ public class TimerController extends CommonController implements Initializable {
 
             System.out.println("controller 잘갖고왔는지?" + Modalcontroller);// controller 잘갖고왔는지?
 
-
             // 새로운 Scene 생성
             Scene scene = new Scene(parent);
 
@@ -215,36 +217,22 @@ public class TimerController extends CommonController implements Initializable {
             mediaPlayer = Modalcontroller.shutDown(mediaPlayer); // 아예 없앰. mediaPlayer 리소스 없애게하려고 이거되나??
         }
 
-        logEntries.add(new TimerLogEntry(currentStartTime, endTime, temp)); // 여기에서 temp를 전달합니다.
-
-        // temp = 흐른 초 까지 전달
-
-        updateLogDisplay();     // 리스트뷰에 업데이트 ..
+        logEntries.add(new TimerLogEntry(currentStartTime, endTime, temp)); // 로그엔트리에 저장
 
 
+
+        DBConnector.insertLogEntryAndUpdateTotalTime(new TimerLogEntry(currentStartTime, endTime, temp)); // DB에 로그 삽입
+        loadLogEntriesForCurrentDate(); // 현재 날짜의 로그를 다시 로드하여 ListView 업데이트
+
+//        selectTotalTime(LocalDate.now());   // 현재 날짜에 대한 총공부시간 갖고와서
+        // 여기에 업ㄷ데이트
+
+        // DB에 로그 삽입 및 총 공부 시간 업데이트
+//        DBConnector.insertLogEntryAndUpdateTotalTime(new TimerLogEntry(currentStartTime, endTime, temp));
+        updateTotalStudyTimeLabelFromDB(); // 총 공부 시간을 다시 로드하고 라벨을 업데이트합니다.
     }
 
-    private void updateLogDisplay() {
-        // 포맷터 정의 (소수점 이하 3자리까지 표현)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'     'HH:mm:ss");
 
-        timerLogView.getItems().clear(); // 기존 로그를 클리어
-        for (TimerLogEntry entry : logEntries) {
-            String formattedStartTime = entry.getStartTime().format(formatter);
-            String formattedEndTime = entry.getEndTime().format(formatter);
-            // 여기에서 temp를 시, 분, 초로 변환
-            int hours = entry.getDurationInSeconds() / 3600;
-            int minutes = (entry.getDurationInSeconds() % 3600) / 60;
-            int seconds = entry.getDurationInSeconds() % 60;
-
-            // 포맷된 공부 시간 문자열 생성
-            String studyDurationFormatted = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
-
-            // 로그 텍스트에 공부 시간을 추가
-            String logText = "[시작시간]  " + formattedStartTime + ", [종료시간]  " + formattedEndTime + ", [공부시간] " + studyDurationFormatted;
-            timerLogView.getItems().add(logText); // 포맷된 텍스트를 추가
-        }
-    }
 
     // 이건 왜?
     void setOutput() {
@@ -377,7 +365,7 @@ public class TimerController extends CommonController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<Integer> hoursList = FXCollections.observableArrayList();
+        ObservableList<Integer> hoursList = FXCollections.observableArrayList();    // 이거 왜 해주는거지?
         ObservableList<Integer> minutesAndSecondsList = FXCollections.observableArrayList();
 
         for (int i = 0; i <= 60; i++) {
@@ -407,10 +395,52 @@ public class TimerController extends CommonController implements Initializable {
             }
         }
         // tree Map? <왜 문자열이들어가지?>
+
+        loadLogEntriesForCurrentDate(); // 현재 날짜에 해당하는 로그 엔트리 로드 및 표시
+
+        // 현재 날짜에 대한 총 공부 시간 로드 및 라벨 업데이트
+        updateTotalStudyTimeLabelFromDB();
+
+
+
+
     }
 
+    private void updateTotalStudyTimeLabelFromDB() {
+        int totalTime = selectTotalTime(LocalDate.now());
+        totalStudyTime.setText(formatDuration(totalTime)); // 'formatDuration' 메소드는 이미 정의되어 있다고 가정
+
+
+    }
+
+
+
+    private void loadLogEntriesForCurrentDate() {
+        LocalDate currentDate = LocalDate.now(); // 현재 날짜 가져오기
+        List<TimerLogEntry> entries = DBConnector.selectLogEntriesByDate(currentDate); // 해당 날짜의 로그 엔트리 가져오기
+
+        // ListView 업데이트
+        ObservableList<String> logList = FXCollections.observableArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        for (TimerLogEntry entry : entries) {
+            String startTime = entry.getStartTime().format(formatter);
+            String endTime = entry.getEndTime().format(formatter);
+            String duration = formatDuration(entry.getDurationInSeconds());
+            String logText = String.format("시작: %s, 종료: %s, 지속: %s", startTime, endTime, duration);
+            logList.add(logText);
+        }
+
+        timerLogView.setItems(logList);
+    }
+
+    private String formatDuration(int totalSeconds) {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
+    }
+
+
+
 }
-
-
-
-
