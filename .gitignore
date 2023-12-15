@@ -165,6 +165,7 @@ fabric.properties
 hs_err_pid*
 replay_pid*
 
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -194,4 +195,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,intellij
 .gradle
 build
+out
+.idea
 
