@@ -8,11 +8,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -38,6 +36,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
@@ -46,6 +45,10 @@ import java.util.stream.Collectors;
 // 파일입출력으로 폴더에있는 파일명 리스트에 추가.
 public class TimerStartModalController {
 
+    // 리스트 추가
+
+    private List<String> playList = new ArrayList<>(); // 재생 목록
+    private int currentTrackIndex = 0; // 현재 재생 중인 트랙 인덱스
 
     @FXML
     private ListView<String> listView; // 이제 ListItem // 챗지피티써서 커스텀으로 체크 + 리스트뷰 만들었는데, 그냥 체크말고 선택하나만
@@ -122,6 +125,7 @@ public class TimerStartModalController {
 //            }
 //        }));
 
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);      // 이거하면 그냥 멀티선택되나?
         listView.setCellFactory(lv -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -133,12 +137,6 @@ public class TimerStartModalController {
                 }
             }
         });
-
-
-
-
-
-
 
         loadMusicFiles();
 
@@ -196,28 +194,55 @@ public class TimerStartModalController {
         // 모달 창에서 시작버튼 눌렀을때!!! 인데 지금 선택된 파일 재생시키려고하는데 잘안도미.
         // 음악 파일 선택한거 재생 어떻게하지,,?
         // ListView에서 선택된 ListItem 객체를 가져옵니다.
-        String selectedFileName  = listView.getSelectionModel().getSelectedItem();
-        // ListView에서 선택된 항목을 가져옵니다.
+//        String selectedFileName  = listView.getSelectionModel().getSelectedItem();
+//        // ListView에서 선택된 항목을 가져옵니다.
+//
+//
+//        // 선택된 항목이 있다면, 해당 파일을 재생합니다.
+//        if (selectedFileName  != null) {
+////            String selectedFileName = selectedItem.getText();
+//            // 사용자의 홈 디렉토리 내 music 폴더의 경로를 기준으로 파일 경로를 생성합니다.
+//            String userHome = System.getProperty("user.home");
+//            Path filePath = Paths.get(userHome, "Music", selectedFileName);
+//
+//            System.out.println("checkFil?" + selectedFileName);
+//
+//            // 파일이 실제로 존재하는지 확인하고 재생합니다.
+//            if (Files.exists(filePath)) {
+//                playHitSound(filePath.toUri().toString());
+//
+//                System.out.println("file true exist? " + filePath.toUri().toString());
+//            } else {
+//                System.err.println("File not found: " + selectedFileName);
+//            }
+//        }
 
+        // ListView에서 선택된 모든 항목을 가져옵니다.
+        List<String> selectedFiles = new ArrayList<>(listView.getSelectionModel().getSelectedItems());
 
-        // 선택된 항목이 있다면, 해당 파일을 재생합니다.
-        if (selectedFileName  != null) {
-//            String selectedFileName = selectedItem.getText();
-            // 사용자의 홈 디렉토리 내 music 폴더의 경로를 기준으로 파일 경로를 생성합니다.
-            String userHome = System.getProperty("user.home");
-            Path filePath = Paths.get(userHome, "Music", selectedFileName);
-
-            System.out.println("checkFil?" + selectedFileName);
-
-            // 파일이 실제로 존재하는지 확인하고 재생합니다.
-            if (Files.exists(filePath)) {
-                playHitSound(filePath.toUri().toString());
-
-                System.out.println("file true exist? " + filePath.toUri().toString());
-            } else {
-                System.err.println("File not found: " + selectedFileName);
-            }
+        if (!selectedFiles.isEmpty()) {
+            playList.clear();
+            playList.addAll(selectedFiles);
+            currentTrackIndex = 0;
+            playNextTrack();
         }
+
+        // 모달 창 닫기 등의 추가 코드...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // 이게 근데 파일 하나만 재생되나
         // 창닫히기
@@ -234,13 +259,37 @@ public class TimerStartModalController {
 
 
     }
+
+    private void playNextTrack() {
+        if (playList.isEmpty() || currentTrackIndex >= playList.size()) {
+            currentTrackIndex = 0; // 리스트의 끝에 도달하면 다시 처음부터 시작
+        }
+
+        String selectedFileName = playList.get(currentTrackIndex++);
+        String userHome = System.getProperty("user.home");
+        Path filePath = Paths.get(userHome, "Music", selectedFileName);
+
+        if (Files.exists(filePath)) {
+            playHitSound(filePath.toUri().toString());
+        }
+    }
+
+
     private void playHitSound(String uri) {
+//        if (mediaPlayer != null) {
+//            shutDown(mediaPlayer);  // mediaPlayer 가 이미있으면 혹시 그럼 null 로만들고 새롭게 다시 생성,,
+//        }
+//        Media media = new Media(uri);
+//        mediaPlayer = new MediaPlayer(media);
+//        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//        mediaPlayer.play();
+
         if (mediaPlayer != null) {
-            shutDown(mediaPlayer);  // mediaPlayer 가 이미있으면 혹시 그럼 null 로만들고 새롭게 다시 생성,,
+            shutDown(mediaPlayer); // mediaPlayer 가 이미있으면 혹시 그럼 null 로만들고 새롭게 다시 생성,,
         }
         Media media = new Media(uri);
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setOnEndOfMedia(this::playNextTrack); // 트랙이 끝나면 다음 트랙 재생
         mediaPlayer.play();
     }
 
