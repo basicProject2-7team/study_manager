@@ -5,6 +5,7 @@ package com.sm.study_manager;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -109,9 +110,22 @@ public class TimerStartModalController {
                     .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
 
             listView.getItems().addAll(items); // 변환된 문자열 목록을 ListView에 추가합니다.
+
+
+            // 지피티가 공유하는 그 리스트로 관리하라고 해서.
+            ObservableList<String> sharedList = SharedData.getSharedMusicList();
+            sharedList.clear();
+            sharedList.addAll(items); // 로드된 항목을 공유 리스트에 추가
+
+            listView.setItems(sharedList); // ListView에 공유된 리스트 설정
+            // ㅠㅠ
+
+
         } catch (IOException e) {
             System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
         }
+
+
     }
 
    // 메디아 플레이어

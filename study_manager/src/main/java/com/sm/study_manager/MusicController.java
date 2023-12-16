@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 
 public class MusicController extends CommonController{
 //
-//    @FXML
+    @FXML
     private ListView<String> musicFileList; // 음악 파일 리스트 뷰
 
     @FXML
@@ -22,6 +22,7 @@ public class MusicController extends CommonController{
 
     @FXML
     private void insertFile() {
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("음악 파일 선택");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("음악 파일", "*.mp3"));
@@ -46,6 +47,7 @@ public class MusicController extends CommonController{
     }
 
     public void initialize(){
+        musicFileList.setItems(SharedData.getSharedMusicList());
 
     }
 
