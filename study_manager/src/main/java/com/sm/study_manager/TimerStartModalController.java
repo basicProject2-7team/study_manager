@@ -48,7 +48,7 @@ public class TimerStartModalController {
 
 
     @FXML
-    private ListView<ListItem> listView; // 이제 ListItem // 챗지피티써서 커스텀으로 체크 + 리스트뷰 만들었는데, 그냥 체크말고 선택하나만
+    private ListView<String> listView; // 이제 ListItem // 챗지피티써서 커스텀으로 체크 + 리스트뷰 만들었는데, 그냥 체크말고 선택하나만
     // 하기로해요 ㅠㅠ
 
     @FXML
@@ -77,36 +77,62 @@ public class TimerStartModalController {
         return mediaPlayer;
     }
 
+//    private void loadMusicFiles() {
+//        String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
+//        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
+//
+//        try {
+//            List<ListItem> items = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
+//                    .filter(Files::isRegularFile) // 일반 파일만 필터링합니다.
+//                    .map(path -> path.getFileName().toString()) // 파일 이름을 문자열로 변환합니다.
+//                    .filter(name -> name.toLowerCase().endsWith(".mp3")) // ".mp3"로 끝나는 파일만 필터링합니다.
+//                    .map(ListItem::new) // 파일 이름을 이용하여 ListItem 객체를 생성합니다.
+//                    .collect(Collectors.toList()); // 결과를 List<ListItem>으로 수집합니다.
+//
+//            listView.getItems().addAll(items); // 변환된 ListItem 객체 목록을 ListView에 추가합니다.
+//        } catch (IOException e) {
+//            System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
+//        }
+//    }
     private void loadMusicFiles() {
         String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
-        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
+        Path musicDirectory = Paths.get(userHome, "Music"); // 사용자의 홈 디렉토리 내에 있는 'Music' 폴더의 경로를 생성합니다.
 
         try {
-            List<ListItem> items = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
+            List<String> items = Files.list(musicDirectory) // 'Music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
                     .filter(Files::isRegularFile) // 일반 파일만 필터링합니다.
                     .map(path -> path.getFileName().toString()) // 파일 이름을 문자열로 변환합니다.
                     .filter(name -> name.toLowerCase().endsWith(".mp3")) // ".mp3"로 끝나는 파일만 필터링합니다.
-                    .map(ListItem::new) // 파일 이름을 이용하여 ListItem 객체를 생성합니다.
-                    .collect(Collectors.toList()); // 결과를 List<ListItem>으로 수집합니다.
+                    .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
 
-            listView.getItems().addAll(items); // 변환된 ListItem 객체 목록을 ListView에 추가합니다.
+            listView.getItems().addAll(items); // 변환된 문자열 목록을 ListView에 추가합니다.
         } catch (IOException e) {
             System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
         }
     }
 
-    // 메디아 플레이어
+   // 메디아 플레이어
     @FXML
     public void initialize() {
         // ListView에 CheckBoxListCell을 사용하도록 설정
-        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<ListItem, ObservableValue<Boolean>>() {
+//        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<ListItem, ObservableValue<Boolean>>() {
+//            @Override
+//            public ObservableValue<Boolean> call(ListItem item) {
+//                return item.checkedProperty();
+//            }
+//        }));
+
+        listView.setCellFactory(lv -> new ListCell<String>() {
             @Override
-            public ObservableValue<Boolean> call(ListItem item) {
-                return item.checkedProperty();
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null); // 아이템이 없거나 null인 경우 텍스트를 표시하지 않음
+                } else {
+                    setText(item); // 아이템이 있는 경우 해당 문자열을 텍스트로 표시
+                }
             }
-        }));
-
-
+        });
 
 
 
@@ -170,13 +196,13 @@ public class TimerStartModalController {
         // 모달 창에서 시작버튼 눌렀을때!!! 인데 지금 선택된 파일 재생시키려고하는데 잘안도미.
         // 음악 파일 선택한거 재생 어떻게하지,,?
         // ListView에서 선택된 ListItem 객체를 가져옵니다.
-        ListItem selectedItem = listView.getSelectionModel().getSelectedItem();
+        String selectedFileName  = listView.getSelectionModel().getSelectedItem();
         // ListView에서 선택된 항목을 가져옵니다.
 
 
         // 선택된 항목이 있다면, 해당 파일을 재생합니다.
-        if (selectedItem != null) {
-            String selectedFileName = selectedItem.getText();
+        if (selectedFileName  != null) {
+//            String selectedFileName = selectedItem.getText();
             // 사용자의 홈 디렉토리 내 music 폴더의 경로를 기준으로 파일 경로를 생성합니다.
             String userHome = System.getProperty("user.home");
             Path filePath = Paths.get(userHome, "Music", selectedFileName);

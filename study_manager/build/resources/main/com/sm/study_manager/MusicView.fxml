@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.sm.study_manager.MusicController"
-            prefHeight="800.0" prefWidth="600.0">
-    <fx:include source="CommonView.fxml"/>
+<AnchorPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sm.study_manager.MusicController">
+    <fx:include source="CommonView.fxml" />
+   <AnchorPane layoutX="13.0" layoutY="68.0" prefHeight="721.0" prefWidth="269.0">
+      <children>
+         <ListView fx:id="musicFileList" layoutX="14.0" layoutY="48.0" prefHeight="608.0" prefWidth="243.0" />
+         <Button fx:id="insertFileButton" layoutX="14.0" layoutY="665.0" mnemonicParsing="false" onAction="#insertFile" prefHeight="38.0" prefWidth="110.0" text="추가" />
+         <Button layoutX="141.0" layoutY="665.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" text="삭제" />
+         <Label layoutX="76.0" layoutY="14.0" prefHeight="29.0" prefWidth="120.0" text="      음악 파일">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </Label>
+      </children>
+   </AnchorPane>
+   <AnchorPane layoutX="316.0" layoutY="66.0" prefHeight="714.0" prefWidth="270.0">
+      <children>
+         <ListView layoutX="13.0" layoutY="53.0" prefHeight="608.0" prefWidth="243.0" />
+         <Button layoutX="14.0" layoutY="665.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" text="추가" />
+         <Button layoutX="151.0" layoutY="665.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" text="삭제" />
+         <Label layoutX="75.0" layoutY="14.0" prefHeight="29.0" prefWidth="120.0" text="    유튜브 링크">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </Label>
+      </children>
+   </AnchorPane>
     <children>
-        <TextArea fx:id="text" layoutX="200.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" text="음악 화면입니다."/>
+        <TextArea fx:id="text" layoutX="200.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" text="음악 화면입니다." />
     </children>
 </AnchorPane>
