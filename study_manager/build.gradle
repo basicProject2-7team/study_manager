@@ -39,9 +39,11 @@ javafx {
 dependencies {
   implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
   implementation 'org.mariadb.jdbc:mariadb-java-client:2.4.0'
+  implementation 'com.zaxxer:HikariCP:5.0.0'
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
 }
 
 test {

@@ -6,6 +6,7 @@ module com.sm.study_manager {
     requires java.desktop;
     requires javafx.media;
     requires java.sql;
+    requires com.zaxxer.hikari;
     //자바 sql 임폴트
     // 메디아 임폴트?
     opens com.sm.study_manager to javafx.fxml;
