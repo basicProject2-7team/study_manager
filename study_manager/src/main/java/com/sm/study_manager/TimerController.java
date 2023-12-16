@@ -81,7 +81,7 @@ public class TimerController extends CommonController implements Initializable {
     Map<Integer, String> numberMap; // 뭐에쓰는거지??
 
     Thread thrd;    // 시간 흐르는 스레드
-    Integer currSeconds;    // 현재 전체 입력한 시간몇초인지.
+    Integer currSeconds = 0;    // 현재 전체 입력한 시간몇초인지.
 
     Integer total = 0;  //
 
@@ -395,10 +395,6 @@ public class TimerController extends CommonController implements Initializable {
 
         // 현재 날짜에 대한 총 공부 시간 로드 및 라벨 업데이트
         updateTotalStudyTimeLabelFromDB();
-
-
-
-
     }
 
     private void updateTotalStudyTimeLabelFromDB() {
