@@ -5,6 +5,7 @@ package com.sm.study_manager;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 public class TimerStartModalController {
 
     // 리스트 추가
-
+    private DBConnector dbConnector = new DBConnector();        // db로 불러오려고;;
     private List<String> playList = new ArrayList<>(); // 재생 목록
     private int currentTrackIndex = 0; // 현재 재생 중인 트랙 인덱스
 
@@ -56,7 +57,9 @@ public class TimerStartModalController {
     // 하기로해요 ㅠㅠ
 
     @FXML
-    private  ListView<String> linkListView;  // 이게 하이퍼 링크 리스트뷰
+    private  ListView<Hyperlink> linkListView;  // 이게 하이퍼 링크 리스트뷰
+
+
     @FXML
     private Button fileSelectButton;    // 파일 고르고 시작 버튼
 
@@ -134,33 +137,35 @@ public class TimerStartModalController {
 
         loadMusicFiles();
 
+        loadYoutubeLinksSelect();
+
 //        // ListView에 공유된 리스트 설정
 //        listView.setItems(SharedData.getSharedMusicList());
 
         // 유튜브 링크 리스트 예시 gpt 작
 
-        // 하이퍼링크 목록을 ListView에 추가
-        List<String> links = Arrays.asList("https://www.youtube.com/watch?v=MJzqr9qdopQ", "http://example.org");
-        linkListView.getItems().addAll(links);
-
-        // 각 항목을 Hyperlink 객체로 변환
-        linkListView.setCellFactory(lv -> new ListCell<String>() {
-            private Hyperlink hyperlink;
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null); // 아이템이 없거나 null이면 아무것도 표시하지 않음
-                } else {
-                    if (hyperlink == null) {    // 하이퍼링크가 null 이면?
-                        hyperlink = new Hyperlink(item);    // 하이퍼링크를 string Item 주고
-                        hyperlink.setOnAction(e -> handleHyperlinkAction(item)); // 하이퍼링크 클릭 이벤트 처리
-                    }
-                    setGraphic(hyperlink); // Hyperlink를 셀의 그래픽으로 설정
-                }
-            }
-        });
+//        // 하이퍼링크 목록을 ListView에 추가
+//        List<String> links = Arrays.asList("https://www.youtube.com/watch?v=MJzqr9qdopQ", "http://example.org");
+//        linkListView.getItems().addAll(links);
+//
+//        // 각 항목을 Hyperlink 객체로 변환
+//        linkListView.setCellFactory(lv -> new ListCell<String>() {
+//            private Hyperlink hyperlink;
+//
+//            @Override
+//            protected void updateItem(String item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || item == null) {
+//                    setGraphic(null); // 아이템이 없거나 null이면 아무것도 표시하지 않음
+//                } else {
+//                    if (hyperlink == null) {    // 하이퍼링크가 null 이면?
+//                        hyperlink = new Hyperlink(item);    // 하이퍼링크를 string Item 주고
+//                        hyperlink.setOnAction(e -> handleHyperlinkAction(item)); // 하이퍼링크 클릭 이벤트 처리
+//                    }
+//                    setGraphic(hyperlink); // Hyperlink를 셀의 그래픽으로 설정
+//                }
+//            }
+//        });
 
 
 
@@ -309,5 +314,38 @@ public class TimerStartModalController {
 
     // 유튜브 링크 더미데이터 listView 에 넣고 그 리스트 중 하나를 클릭하면
 
+    private void loadYoutubeLinksSelect() {
+        // DB에서 유튜브 링크 목록을 가져옵니다
+        List<String[]> linkData = dbConnector.fetchAllLinks();
 
+        // ListView의 아이템으로 설정할 ObservableList 생성
+        ObservableList<Hyperlink> linksObservableList = FXCollections.observableArrayList();
+        linkData.forEach(data -> {
+            String title = data[0];
+            String url = data[1];
+            Hyperlink hyperlink = new Hyperlink(title);
+            hyperlink.setOnAction(event -> {
+                // 사용자의 기본 웹 브라우저에서 링크 열기
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            linksObservableList.add(hyperlink);
+        });
+
+        linkListView.setItems(linksObservableList);
+        linkListView.setCellFactory(lv -> new ListCell<Hyperlink>() {
+            @Override
+            protected void updateItem(Hyperlink item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(item);
+                }
+            }
+        });
+    }
 }
