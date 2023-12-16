@@ -20,9 +20,9 @@
    </AnchorPane>
    <AnchorPane layoutX="316.0" layoutY="66.0" prefHeight="714.0" prefWidth="270.0">
       <children>
-         <ListView layoutX="13.0" layoutY="53.0" prefHeight="600.0" prefWidth="243.0" />
-         <Button layoutX="14.0" layoutY="665.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" text="추가" />
-         <Button layoutX="145.0" layoutY="665.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="110.0" text="삭제" />
+         <ListView fx:id="youtubeLinkList" layoutX="13.0" layoutY="53.0" prefHeight="600.0" prefWidth="243.0" />
+         <Button fx:id="linkInserButton" layoutX="14.0" layoutY="665.0" mnemonicParsing="false" onAction="#linkInsertModal" prefHeight="38.0" prefWidth="110.0" text="추가" />
+         <Button fx:id="deleteLinkButton" layoutX="145.0" layoutY="665.0" mnemonicParsing="false" onAction="#deleteLink" prefHeight="38.0" prefWidth="110.0" text="삭제" />
          <Label layoutX="75.0" layoutY="14.0" prefHeight="29.0" prefWidth="120.0" text="    유튜브 링크">
             <font>
                <Font size="16.0" />
