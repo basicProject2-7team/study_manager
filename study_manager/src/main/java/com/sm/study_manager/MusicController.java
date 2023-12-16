@@ -30,7 +30,8 @@ public class MusicController extends CommonController{
     @FXML
     private ListView<String> musicFileList; // 음악 파일 리스트 뷰
 
-    
+    @FXML
+    private ListView<Hyperlink> youtubeLinkList; // Hyperlink 객체를 담을 ListView 유튜브링크
 
     @FXML
     private Button insertFileButton; // 파일 추가 버튼
@@ -48,8 +49,7 @@ public class MusicController extends CommonController{
     private DBConnector dbConnector = new DBConnector();    // db 에서 제목과 유튜브 링크 리스트 가져와야해서.
 
 
-    @FXML
-    private ListView<Hyperlink> youtubeLinkList; // Hyperlink 객체를 담을 ListView 유튜브링크
+
 
 
     LinkInsertController linkInsertControl;
@@ -172,6 +172,11 @@ public class MusicController extends CommonController{
             stage.setScene(scene); // Stage에 Scene 설정   이런식으로 씬을 갖고옴 fxml 파일
             stage.showAndWait(); // 모달 창을 표시하고 사용자의 입력을 기다림
             // 다른 밑에 컴포넌트 사용 못하게.
+
+
+//
+//            // 링크 추가 후 ListView 업데이트
+//            loadYoutubeLinks();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -234,17 +239,20 @@ public class MusicController extends CommonController{
     // 이거 삭제
 
 
-    void loadYoutubeLinks() {
-        List<String[]> linkData = dbConnector.fetchAllLinks(); // DB에서 타이틀과 링크를 String 배열로 가져옵니다.
+    public void loadYoutubeLinks() {
+        // DB에서 유튜브 링크 목록을 가져옵니다
+        List<String[]> linkData = dbConnector.fetchAllLinks();
 
+        // ListView의 아이템으로 설정할 ObservableList 생성
         ObservableList<Hyperlink> linksObservableList = FXCollections.observableArrayList();
         linkData.forEach(data -> {
             String title = data[0];
             String url = data[1];
             Hyperlink hyperlink = new Hyperlink(title);
             hyperlink.setOnAction(event -> {
+                // 사용자의 기본 웹 브라우저에서 링크 열기
                 try {
-                    Desktop.getDesktop().browse(new URI(url)); // 사용자의 기본 브라우저에서 링크 열기
+                    Desktop.getDesktop().browse(new URI(url));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -253,21 +261,15 @@ public class MusicController extends CommonController{
         });
 
         youtubeLinkList.setItems(linksObservableList);
-        youtubeLinkList.setCellFactory(new Callback<ListView<Hyperlink>, ListCell<Hyperlink>>() {
+        youtubeLinkList.setCellFactory(lv -> new ListCell<Hyperlink>() {
             @Override
-            public ListCell<Hyperlink> call(ListView<Hyperlink> listView) {
-                return new ListCell<Hyperlink>() {
-                    @Override
-                    protected void updateItem(Hyperlink item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText(null);
-                            setGraphic(null);
-                        } else {
-                            setGraphic(item);
-                        }
-                    }
-                };
+            protected void updateItem(Hyperlink item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(item);
+                }
             }
         });
     }

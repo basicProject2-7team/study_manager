@@ -257,6 +257,17 @@ public class TimerController extends CommonController implements Initializable {
 
             scrollDown(); // 스크롤 다운 메서드를 호출합니다.
         }
+
+        // 사용자가 '예'를 선택한 경우, 타이머를 취소하고 temp 값을 초기화합니다.
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // 기존의 취소 로직 ...
+
+            // 타이머 상태를 '실행 중이지 않음'으로 변경합니다.
+            isTimerRunningStatic = false;
+
+//            // 타이머 관련 UI를 초기 상태로 리셋합니다.
+//            resetTimerUI();
+        }
     }
 
     @FXML
@@ -381,12 +392,14 @@ public class TimerController extends CommonController implements Initializable {
         // 현재 날짜에 대한 총 공부 시간 로드 및 라벨 업데이트
         updateTotalStudyTimeLabelFromDB();
 
-        // 타이머가 실행 중이면 타이머 화면을 보여준다
-        if (isTimerRunningStatic) {
-            scrollUp();
-        }
+//        // 타이머가 실행 중이면 타이머 화면을 보여준다
+//        if (isTimerRunningStatic) {
+//            scrollUp();
+//        }
 
         // 되긴하는데,,
+
+
 
 
 
@@ -427,6 +440,11 @@ public class TimerController extends CommonController implements Initializable {
         int seconds = totalSeconds % 60;
         return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
     }
+
+
+
+
+
 
 
 

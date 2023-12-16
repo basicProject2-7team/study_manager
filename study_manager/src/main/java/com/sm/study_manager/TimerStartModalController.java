@@ -161,6 +161,10 @@ public class TimerStartModalController {
                 }
             }
         });
+
+
+
+//        loadYoutubeLinks();
     }
     private void handleHyperlinkAction(String url) {
         if (Desktop.isDesktopSupported()) {
