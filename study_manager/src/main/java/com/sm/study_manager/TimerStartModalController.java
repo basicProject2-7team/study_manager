@@ -81,23 +81,9 @@ public class TimerStartModalController {
         return mediaPlayer;
     }
 
-//    private void loadMusicFiles() {
-//        String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
-//        Path musicDirectory = Paths.get(userHome, "music"); // 사용자의 홈 디렉토리 내에 있는 'music' 폴더의 경로를 생성합니다.
-//
-//        try {
-//            List<ListItem> items = Files.list(musicDirectory) // 'music' 디렉토리 내의 모든 파일을 Stream으로 가져옵니다.
-//                    .filter(Files::isRegularFile) // 일반 파일만 필터링합니다.
-//                    .map(path -> path.getFileName().toString()) // 파일 이름을 문자열로 변환합니다.
-//                    .filter(name -> name.toLowerCase().endsWith(".mp3")) // ".mp3"로 끝나는 파일만 필터링합니다.
-//                    .map(ListItem::new) // 파일 이름을 이용하여 ListItem 객체를 생성합니다.
-//                    .collect(Collectors.toList()); // 결과를 List<ListItem>으로 수집합니다.
-//
-//            listView.getItems().addAll(items); // 변환된 ListItem 객체 목록을 ListView에 추가합니다.
-//        } catch (IOException e) {
-//            System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
-//        }
-//    }
+
+
+
     private void loadMusicFiles() {
         String userHome = System.getProperty("user.home"); // 현재 사용자의 홈 디렉토리 경로를 가져옵니다.
         Path musicDirectory = Paths.get(userHome, "Music"); // 사용자의 홈 디렉토리 내에 있는 'Music' 폴더의 경로를 생성합니다.
@@ -110,22 +96,16 @@ public class TimerStartModalController {
                     .collect(Collectors.toList()); // 결과를 List<String>으로 수집합니다.
 
             listView.getItems().addAll(items); // 변환된 문자열 목록을 ListView에 추가합니다.
-
-
             // 지피티가 공유하는 그 리스트로 관리하라고 해서.
-            ObservableList<String> sharedList = SharedData.getSharedMusicList();
-            sharedList.clear();
-            sharedList.addAll(items); // 로드된 항목을 공유 리스트에 추가
-
-            listView.setItems(sharedList); // ListView에 공유된 리스트 설정
+////            ObservableList<String> sharedList = SharedData.getSharedMusicList();
+//            sharedList.clear();
+//            sharedList.addAll(items); // 로드된 항목을 공유 리스트에 추가
+//
+//            listView.setItems(sharedList); // ListView에 공유된 리스트 설정
             // ㅠㅠ
-
-
         } catch (IOException e) {
             System.err.println("Error reading music directory: " + e.getMessage()); // 오류 발생 시 메시지를 출력합니다.
         }
-
-
     }
 
    // 메디아 플레이어
@@ -154,6 +134,9 @@ public class TimerStartModalController {
 
         loadMusicFiles();
 
+//        // ListView에 공유된 리스트 설정
+//        listView.setItems(SharedData.getSharedMusicList());
+
         // 유튜브 링크 리스트 예시 gpt 작
 
         // 하이퍼링크 목록을 ListView에 추가
@@ -178,10 +161,7 @@ public class TimerStartModalController {
                 }
             }
         });
-
-
     }
-
     private void handleHyperlinkAction(String url) {
         if (Desktop.isDesktopSupported()) {
             // Desktop 클래스가 지원되는 경우
@@ -208,28 +188,7 @@ public class TimerStartModalController {
         // 모달 창에서 시작버튼 눌렀을때!!! 인데 지금 선택된 파일 재생시키려고하는데 잘안도미.
         // 음악 파일 선택한거 재생 어떻게하지,,?
         // ListView에서 선택된 ListItem 객체를 가져옵니다.
-//        String selectedFileName  = listView.getSelectionModel().getSelectedItem();
-//        // ListView에서 선택된 항목을 가져옵니다.
-//
-//
-//        // 선택된 항목이 있다면, 해당 파일을 재생합니다.
-//        if (selectedFileName  != null) {
-////            String selectedFileName = selectedItem.getText();
-//            // 사용자의 홈 디렉토리 내 music 폴더의 경로를 기준으로 파일 경로를 생성합니다.
-//            String userHome = System.getProperty("user.home");
-//            Path filePath = Paths.get(userHome, "Music", selectedFileName);
-//
-//            System.out.println("checkFil?" + selectedFileName);
-//
-//            // 파일이 실제로 존재하는지 확인하고 재생합니다.
-//            if (Files.exists(filePath)) {
-//                playHitSound(filePath.toUri().toString());
-//
-//                System.out.println("file true exist? " + filePath.toUri().toString());
-//            } else {
-//                System.err.println("File not found: " + selectedFileName);
-//            }
-//        }
+
 
         // ListView에서 선택된 모든 항목을 가져옵니다.
         List<String> selectedFiles = new ArrayList<>(listView.getSelectionModel().getSelectedItems());
@@ -240,23 +199,6 @@ public class TimerStartModalController {
             currentTrackIndex = 0;
             playNextTrack();
         }
-
-        // 모달 창 닫기 등의 추가 코드...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // 이게 근데 파일 하나만 재생되나
         // 창닫히기

@@ -81,7 +81,7 @@ public class TimerController extends CommonController implements Initializable {
     Map<Integer, String> numberMap; // 뭐에쓰는거지??
 
     Thread thrd;    // 시간 흐르는 스레드
-    Integer currSeconds;    // 현재 전체 입력한 시간몇초인지.
+    Integer currSeconds=0;    // 현재 전체 입력한 시간몇초인지.
 
     Integer total = 0;  //
 
@@ -104,32 +104,25 @@ public class TimerController extends CommonController implements Initializable {
     // 일시정지 버튼을 누르면 stop() 했다가 다시 실행되게 해야함.
 
 
+
+    private static boolean isTimerRunningStatic = false;
     @FXML
     private void start(ActionEvent event) {  // 시작버튼 이벤트 핸들러
+        if (!isTimerRunningStatic) {
+            currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue(), secondsInput.getValue());
+            hoursInput.setValue(0);
+            minutesInput.setValue(0);
+            secondsInput.setValue(0);
+            showModalWindow();
+            currentStartTime = LocalDateTime.now();
+            scrollUp();
+            startCountdown();
 
-        currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue(), secondsInput.getValue());
-        // 현재 흘러야하는 초 값넣은것 다 갖고와서 바꿔주기
+            // 그후에
+            this.mediaPlayer = Modalcontroller.getMediaPlayer();
+            isTimerRunningStatic = true;
+        }
 
-        hoursInput.setValue(0);
-        minutesInput.setValue(0);
-        secondsInput.setValue(0);
-
-        // 인풋값 0으로 초기화
-
-        // 여기서 모달창 띄워야함.
-        showModalWindow();
-
-
-        // 모달창 꺼지면 재생된다 음악이..
-
-
-        currentStartTime = LocalDateTime.now(); // 시작 시간 기록
-
-        scrollUp(); // 시간흐르는 창으로 변하고 , 초 카운트
-
-        // 그후에
-        this.mediaPlayer = Modalcontroller.getMediaPlayer();
-        System.out.println("player Check." + this.mediaPlayer); // 플레이어도 확인.
 
         // mediaPlayer 가 생겨서 가져옴 /
     }
@@ -183,6 +176,7 @@ public class TimerController extends CommonController implements Initializable {
                 Platform.runLater(() -> { // 0에 도달하면
                     updateTotalStudyTimeLabel(); // 흐른 시간 업데이트
                     temp = 0; // 임시 시간 초기화
+                    isTimerRunningStatic = false;             // false 로 바꿈 이제 타이머 안하고있따.
                     scrollDown(); // 다운 스크롤
                 });
             } catch (InterruptedException e) {
@@ -322,16 +316,7 @@ public class TimerController extends CommonController implements Initializable {
         tr2.setToY(0);
         tr2.setNode(timerPane);
         ParallelTransition pt = new ParallelTransition(tr1, tr2);
-        pt.setOnFinished(e -> {
-            try {
-                System.out.println("Start Countdown");
-                startCountdown();   // 여기서 스레드시작
 
-            } catch (Exception e2) {
-                //
-
-            }
-        });
         pt.play();
     }
 
@@ -396,10 +381,17 @@ public class TimerController extends CommonController implements Initializable {
         // 현재 날짜에 대한 총 공부 시간 로드 및 라벨 업데이트
         updateTotalStudyTimeLabelFromDB();
 
+        // 타이머가 실행 중이면 타이머 화면을 보여준다
+        if (isTimerRunningStatic) {
+            scrollUp();
+        }
+
+        // 되긴하는데,,
 
 
 
     }
+
 
     private void updateTotalStudyTimeLabelFromDB() {
         int totalTime = dbConnector.selectTotalTime(LocalDate.now());
