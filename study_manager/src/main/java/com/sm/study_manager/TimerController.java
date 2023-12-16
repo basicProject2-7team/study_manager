@@ -40,15 +40,8 @@ import com.sm.study_manager.TimerLogEntry;
 
 import com.sm.study_manager.TimerStartModalController;  // 모달 창 컨트롤러 import 해줘야하나?
 
-import static com.sm.study_manager.DBConnector.selectTotalTime;
-
-// 여기 잘 못불러오네
-
 
 public class TimerController extends CommonController implements Initializable {
-
-    // db 연동
-
 
     @FXML
     private Label totalStudyTime;
@@ -104,6 +97,8 @@ public class TimerController extends CommonController implements Initializable {
     // 클래스 멤버 변수로 MediaPlayer 추가
     TimerStartModalController Modalcontroller;
     private MediaPlayer mediaPlayer;
+
+    private DBConnector dbConnector = new DBConnector();
 
     // 종료버튼눌러 종료하거나, 0이되거나 하면 음악이 종료되고
     // 일시정지 버튼을 누르면 stop() 했다가 다시 실행되게 해야함.
@@ -221,7 +216,7 @@ public class TimerController extends CommonController implements Initializable {
 
 
 
-        DBConnector.insertLogEntryAndUpdateTotalTime(new TimerLogEntry(currentStartTime, endTime, temp)); // DB에 로그 삽입
+        dbConnector.insertLogEntryAndUpdateTotalTime(new TimerLogEntry(currentStartTime, endTime, temp)); // DB에 로그 삽입
         loadLogEntriesForCurrentDate(); // 현재 날짜의 로그를 다시 로드하여 ListView 업데이트
 
 //        selectTotalTime(LocalDate.now());   // 현재 날짜에 대한 총공부시간 갖고와서
@@ -407,7 +402,7 @@ public class TimerController extends CommonController implements Initializable {
     }
 
     private void updateTotalStudyTimeLabelFromDB() {
-        int totalTime = selectTotalTime(LocalDate.now());
+        int totalTime = dbConnector.selectTotalTime(LocalDate.now());
         totalStudyTime.setText(formatDuration(totalTime)); // 'formatDuration' 메소드는 이미 정의되어 있다고 가정
 
 
@@ -417,7 +412,7 @@ public class TimerController extends CommonController implements Initializable {
 
     private void loadLogEntriesForCurrentDate() {
         LocalDate currentDate = LocalDate.now(); // 현재 날짜 가져오기
-        List<TimerLogEntry> entries = DBConnector.selectLogEntriesByDate(currentDate); // 해당 날짜의 로그 엔트리 가져오기
+        List<TimerLogEntry> entries = dbConnector.selectLogEntriesByDate(currentDate); // 해당 날짜의 로그 엔트리 가져오기
 
         // ListView 업데이트
         ObservableList<String> logList = FXCollections.observableArrayList();

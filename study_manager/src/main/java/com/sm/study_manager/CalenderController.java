@@ -1,5 +1,7 @@
 package com.sm.study_manager;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -22,15 +25,25 @@ import java.net.URL;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Function;
 
 public class CalenderController extends CommonController implements Initializable {
     // 달력을 표시할 그리드 입니다.
     @FXML
     private GridPane grid;
+
+    @FXML
+    private Label allTimesLabel;
+
+    @FXML
+    private Label selectedDate;
+
+    @FXML
+    private Label studyTime;
+
+    @FXML
+    private ListView studyList;
 
     // 일자별 데이터를 표시할 HBox 입니다.
     @FXML
@@ -87,6 +100,8 @@ public class CalenderController extends CommonController implements Initializabl
     private List<GridIndex> previousMonthGridIndices;
     private List<GridIndex> nextMonthGridIndices;
 
+    private DBConnector dbConnector = new DBConnector();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // hbox를 리스트로 만들어 일자별 데이터를 표시할때 사용합니다.
@@ -103,6 +118,9 @@ public class CalenderController extends CommonController implements Initializabl
 
         previousMonthGridIndices = new ArrayList<>();
         nextMonthGridIndices = new ArrayList<>();
+
+        int allTimes = dbConnector.getAllTimes();
+        allTimesLabel.setText(formatDuration(allTimes));
 
         fillUpCalendar(currentYear, currentMonthInt);
         String strYearMonth = currentYear + "년" + currentMonthInt + "월";
@@ -187,16 +205,6 @@ public class CalenderController extends CommonController implements Initializabl
         int row = rowIndex != null ? rowIndex : 0;
         int col = colIndex != null ? colIndex : 0;
 
-        // 최종적으로 찾은 GridPane 내 위치의 행과 열을 출력
-        if (clickedNode != null) {
-
-            if(previousMonthGridIndices.contains(new GridIndex(row, col))){
-                bMonthClick(null);
-            } else if (nextMonthGridIndices.contains(new GridIndex(row, col))){
-                nMonthClick(null);
-            }
-        }
-
         // 클릭된 Label의 스타일을 변경하고 날짜를 출력
         if (clickedLabel != null) {
             clickedLabel.setStyle("-fx-border-color: red;");
@@ -214,12 +222,86 @@ public class CalenderController extends CommonController implements Initializabl
                 clickedLabelDate = firstAndLastDay.atDay(clickedDay);
             }
 
-            System.out.println("format 전 : " + clickedLabelDate);
-            // 날짜를 "YYYY-MM-DD" 형식으로 출력
-            String formattedDate = clickedLabelDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            System.out.println("Clicked date: " + formattedDate);
+            getCurrentInfo(clickedLabelDate);
+            settingLabel(clickedLabelDate);
+
+            // 최종적으로 찾은 GridPane 내 위치의 행과 열을 출력
+            if (clickedNode != null) {
+                if(previousMonthGridIndices.contains(new GridIndex(row, col))){
+                    bMonthClick(null);
+                    for (Label label : labelList) {
+                        if (label.getText().equals(clickedDate)) {
+                            label.setStyle("-fx-border-color: red;"); // 예시
+                            return;
+                        }
+                    }
+                } else if (nextMonthGridIndices.contains(new GridIndex(row, col))){
+                    nMonthClick(null);
+                    for (Label label : labelList) {
+                        if (label.getText().equals(clickedDate)) {
+                            label.setStyle("-fx-border-color: red;"); // 예시
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
+
+    public void settingLabel(LocalDate clickedLabelDate){
+        int year = clickedLabelDate.getYear();
+        int month = clickedLabelDate.getMonthValue();
+        int day = clickedLabelDate.getDayOfMonth();
+        int week = clickedLabelDate.getDayOfWeek().getValue();
+
+        int totalTime = dbConnector.selectTotalTime(clickedLabelDate);
+
+        selectedDate.setText(year+"년 "+month+"월 "+day+"일 ["+getWeek(week)+"]");
+        studyTime.setText(formatDuration(totalTime));
+    }
+
+    public String getWeek(int num) {
+        switch (num){
+            case 7 :
+                return "일요일";
+            case 1 :
+                return "월요일";
+            case 2 :
+                return "화요일";
+            case 3 :
+                return "수요일";
+            case 4 :
+                return "목요일";
+            case 5 :
+                return "금요일";
+            case 6 :
+                return "토요일";
+        }
+        return "";
+    }
+
+    public String formatDuration(int totalSeconds) {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
+    }
+
+    public void getCurrentInfo(LocalDate clickedLabelDate){
+        List<TimerLogEntry> list = dbConnector.selectLogEntriesByDate(clickedLabelDate);
+
+        ObservableList<String> logList = FXCollections.observableArrayList();
+        for(TimerLogEntry timerLogEntry : list) {
+            String startTime = timerLogEntry.getStartTime().toString();
+            String endTime = timerLogEntry.getEndTime().toString();
+            String duration = formatDuration(timerLogEntry.getDurationInSeconds());
+            String logText = String.format("시작: %s, 종료: %s, 지속: %s", startTime, endTime, duration);
+            logList.add(logText);
+        }
+
+        studyList.setItems(logList);
+    }
+
 
     @FXML
     private void todayClick(ActionEvent event) {
