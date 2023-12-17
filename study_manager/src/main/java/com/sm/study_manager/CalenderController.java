@@ -45,12 +45,6 @@ public class CalenderController extends CommonController implements Initializabl
     @FXML
     private ListView studyList;
 
-    // 일자별 데이터를 표시할 HBox 입니다.
-    @FXML
-    private HBox hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10, hbox11, hbox12, hbox13, hbox14,
-            hbox15, hbox16, hbox17, hbox18, hbox19, hbox20, hbox21, hbox22, hbox23, hbox24, hbox25, hbox26, hbox27,
-            hbox28, hbox29, hbox30, hbox31, hbox32, hbox33, hbox34, hbox35, hbox36, hbox37, hbox38, hbox39;
-
     // 날자를 표시할 라벨 입니다.
     @FXML
     private Label lbl00, lbl01, lbl02, lbl03, lbl04, lbl05, lbl06, lbl10, lbl11, lbl12, lbl13, lbl14, lbl15, lbl16,
@@ -61,23 +55,9 @@ public class CalenderController extends CommonController implements Initializabl
     public Label[] labelList;
     public HBox[] hboxList;
 
-    // 월단위를 뒤로 가는 버튼
-    @FXML
-    private Button btnBMonth;
-
     // 현재 년도와 달을 표시하는 버튼과 현재의 달로 바로 돌아오는 버튼 입니다.
     @FXML
     private Button btnToday;
-
-    // 월단위를 앞으로 가는 버튼
-    @FXML
-    private Button btnNMonth;
-
-    // 이전달의 일 수
-    private int previousMonthDays;
-
-    // 다음달의 일 수
-    private int nextMonthDays;
 
     // 현재의 년과 월을 구합니다.
     private LocalDateTime date = LocalDateTime.now();
@@ -86,15 +66,9 @@ public class CalenderController extends CommonController implements Initializabl
 
     // 월의 첫번째 요일과 마지막 요일을 저장할부분
     YearMonth firstAndLastDay;
-    // 첫번째날의 요일
-    String strFirstWeek;
-    // 마지막날의 요일
-    String strLastWeek;
-    // -----------------날짜의 칸을 클릭했을때 값을 받아오는
-    String clickDate;
 
-    // 오늘날짜를 깜빡이게 하고 멈추게 하기 위해서 사용합니다.
-    public Boolean booStopBlink = true;
+    // 색 비율 (초 단위)
+    double persent;
 
     // 이전 달과 다음 달의 날짜 인덱스를 저장할 리스트
     private List<GridIndex> previousMonthGridIndices;
@@ -104,12 +78,6 @@ public class CalenderController extends CommonController implements Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // hbox를 리스트로 만들어 일자별 데이터를 표시할때 사용합니다.
-        hboxList = new HBox[] { hbox1, hbox2, hbox3, hbox4, hbox5, hbox6, hbox7, hbox8, hbox9, hbox10, hbox11, hbox12,
-                hbox13, hbox14, hbox15, hbox16, hbox17, hbox18, hbox19, hbox20, hbox21, hbox22, hbox23, hbox24, hbox25,
-                hbox26, hbox27, hbox28, hbox29, hbox30, hbox31, hbox32, hbox33, hbox34, hbox35, hbox36, hbox37, hbox38,
-                hbox39 };
-
         // 라벨을 리스트로 만들어 날자를 표시할때 사용합니다.
         labelList = new Label[] { lbl00, lbl01, lbl02, lbl03, lbl04, lbl05, lbl06, lbl10, lbl11, lbl12, lbl13, lbl14,
                 lbl15, lbl16, lbl20, lbl21, lbl22, lbl23, lbl24, lbl25, lbl26, lbl30, lbl31, lbl32, lbl33, lbl34, lbl35,
@@ -119,29 +87,30 @@ public class CalenderController extends CommonController implements Initializabl
         previousMonthGridIndices = new ArrayList<>();
         nextMonthGridIndices = new ArrayList<>();
 
-        int allTimes = dbConnector.getAllTimes();
-        allTimesLabel.setText(formatDuration(allTimes));
+        int currentDay = LocalDate.now().getDayOfMonth();
+        LocalDate currentDate = LocalDate.of(currentYear, currentMonthInt, currentDay);
+        settingLabel(currentDate);
 
         fillUpCalendar(currentYear, currentMonthInt);
         String strYearMonth = currentYear + "년" + currentMonthInt + "월";
         btnToday.setText(strYearMonth);
+        for (Label label : labelList) {
+            if (label.getText().equals(String.valueOf(currentDay))) {
+                String currentStyle = label.getStyle();
+                label.setStyle(currentStyle + "; -fx-border-color: red;");
+                return;
+            }
+        }
     }
 
     @FXML
     void bMonthClick(ActionEvent event) {//이전달을 표시하는 부분
-
-        booStopBlink = false;// 달이 변경되면 블링크를 멈춘다.
 
         if (currentMonthInt == 1) {
             currentYear--;
             currentMonthInt = 12;
         } else {
             currentMonthInt--;
-        }
-
-        // 현재의 달력이 현재의 년과 달이 같으면 깜빡임
-        if (date.getYear() == currentYear && date.getMonthValue() == currentMonthInt) {
-            booStopBlink = true;
         }
 
         fillUpCalendar(currentYear, currentMonthInt);
@@ -153,18 +122,11 @@ public class CalenderController extends CommonController implements Initializabl
     @FXML
     void nMonthClick(ActionEvent event) {//다음달을 표시하는 부분
 
-        booStopBlink = false;// 달이 변경되면 블링크를 멈춘다.
-
         if (currentMonthInt == 12) {
             currentYear++;
             currentMonthInt = 1;
         } else {
             currentMonthInt++;
-        }
-
-        // 현재의 달력이 현재의 년과 달이 같으면 깜빡임
-        if (date.getYear() == currentYear && date.getMonthValue() == currentMonthInt) {
-            booStopBlink = true;
         }
 
         fillUpCalendar(currentYear, currentMonthInt);
@@ -207,7 +169,9 @@ public class CalenderController extends CommonController implements Initializabl
 
         // 클릭된 Label의 스타일을 변경하고 날짜를 출력
         if (clickedLabel != null) {
-            clickedLabel.setStyle("-fx-border-color: red;");
+            String currentStyle = clickedLabel.getStyle();
+            String backgroundColorStyle = extractBackgroundColorStyle(currentStyle);
+            clickedLabel.setStyle(backgroundColorStyle + "; -fx-border-color: red;");
             clickedDate = clickedLabel.getText();
             System.out.println("Clicked date: " + clickedDate);
 
@@ -222,7 +186,6 @@ public class CalenderController extends CommonController implements Initializabl
                 clickedLabelDate = firstAndLastDay.atDay(clickedDay);
             }
 
-            getCurrentInfo(clickedLabelDate);
             settingLabel(clickedLabelDate);
 
             // 최종적으로 찾은 GridPane 내 위치의 행과 열을 출력
@@ -253,9 +216,13 @@ public class CalenderController extends CommonController implements Initializabl
         int month = clickedLabelDate.getMonthValue();
         int day = clickedLabelDate.getDayOfMonth();
         int week = clickedLabelDate.getDayOfWeek().getValue();
-
         int totalTime = dbConnector.selectTotalTime(clickedLabelDate);
+        int allTimes = dbConnector.getAllTimes();
+        // 1초/모든시간
+        persent = 1.0/allTimes;
 
+        getCurrentInfo(clickedLabelDate);
+        allTimesLabel.setText(formatDuration(allTimes));
         selectedDate.setText(year+"년 "+month+"월 "+day+"일 ["+getWeek(week)+"]");
         studyTime.setText(formatDuration(totalTime));
     }
@@ -321,9 +288,33 @@ public class CalenderController extends CommonController implements Initializabl
 
     private void clearLabelBorder() {
         for (Label label : labelList) {
-            Paint labelTextColor = label.getTextFill();
-            label.setStyle("-fx-text-fill: " + convertToHexColor(labelTextColor) + ";");
+            String currentStyle = label.getStyle();
+            String backgroundColorStyle = extractBackgroundColorStyle(currentStyle);
+            Paint textColor = label.getTextFill();
+            label.setStyle(backgroundColorStyle + "; -fx-border-color: transparent; -fx-text-fill: "+convertToHexColor(textColor)+";");
         }
+    }
+
+    // 배경색 스타일을 추출하는 메소드
+    private String extractBackgroundColorStyle(String style) {
+        if (style == null) {
+            return "";
+        }
+
+        // '-fx-background-color' 속성 찾기
+        int index = style.indexOf("-fx-background-color");
+        if (index != -1) {
+            int endIndex = style.indexOf(";", index);
+            if (endIndex != -1) {
+                // '-fx-background-color' 속성 값 추출
+                return style.substring(index, endIndex);
+            } else {
+                // 스타일 문자열의 끝까지 '-fx-background-color' 속성 값 추출
+                return style.substring(index);
+            }
+        }
+
+        return "";
     }
 
     private String convertToHexColor(Paint paint) {
@@ -348,9 +339,6 @@ public class CalenderController extends CommonController implements Initializabl
         DayOfWeek firstWeekDay = firstDayOfMonth.getDayOfWeek(); // 1일
         DayOfWeek lastWeekDay = lastDayOfMonth.getDayOfWeek(); // 마지막 일
         firstAndLastDay = YearMonth.of(currentYear, currentMonthInt); // 월의 시작일, 마지막 일
-        // 첫번째 날의 요일과 마지막 날의 요일을 문자열로 저장
-        String strFirstWeek = firstWeekDay.getDisplayName(TextStyle.SHORT, Locale.getDefault());
-        String strLastWeek = lastWeekDay.getDisplayName(TextStyle.SHORT, Locale.getDefault());
 
         // 첫번째 날의 인덱스 계산
         int firstIndex = firstWeekDay.getValue() % 7;
@@ -358,7 +346,6 @@ public class CalenderController extends CommonController implements Initializabl
         // 이전 달의 마지막 날 채우기
         YearMonth previousMonth = yearMonth.minusMonths(1); // 이전 달의 YearMonth 객체 생성
         int lastDayOfPreviousMonth = previousMonth.lengthOfMonth(); // 이전 달의 마지막 일
-        previousMonthDays = firstIndex; // 이전 달의 마지막 날을 채울 개수
 
         // 이전 달의 날짜 인덱스 추가
         for (int i = 0; i < firstIndex; i++) {
@@ -374,6 +361,7 @@ public class CalenderController extends CommonController implements Initializabl
         // 이번 달 날짜 표시
         int day = 1;
         for (int i = firstIndex; i < firstIndex + yearMonth.lengthOfMonth(); i++) {
+            setBackgroundColors(yearMonth, day, labelList[i]);
             labelList[i].setText(String.valueOf(day));
             day++;
         }
@@ -399,7 +387,13 @@ public class CalenderController extends CommonController implements Initializabl
                 labelList[i].setStyle("-fx-text-fill: grey;");
                 nextMonthFillCount++;
             }
-            nextMonthDays = nextMonthFillCount;
         }
     }
+
+    public void setBackgroundColors(YearMonth yearMonth, int day, Label label) {
+        LocalDate date = yearMonth.atDay(day);
+        int todayTotalTime = dbConnector.getTodayTotalTime(date);
+        label.setStyle("-fx-background-color: rgb(0, 255, 0, "+todayTotalTime*persent+")");
+    }
+
 }

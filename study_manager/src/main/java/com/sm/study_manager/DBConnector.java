@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBConnector {
-    private final String URL = "jdbc:mariadb://10.20.64.216:3306/STUDYDB";      // url 은 localhost에 studyDB 에 있음
-    private final String USER = "user";
-    private final String PASSWORD = "1234";
     private Connection connection;
     private PreparedStatement pstmt;
     private HikariDataSource dataSource;
@@ -22,8 +19,8 @@ public class DBConnector {
         try {
 //            (DataSource) DriverManager.getConnection(URL, USER, PASSWORD);
             HikariConfig config = new HikariConfig();
-            config.setJdbcUrl("jdbc:mariadb://localhost:3306/studydb"); // 데이터베이스 URL
-            config.setUsername("root"); // 데이터베이스 사용자 이름
+            config.setJdbcUrl("jdbc:mariadb://10.20.33.68:3306/studydb"); // 데이터베이스 URL
+            config.setUsername("user"); // 데이터베이스 사용자 이름
             config.setPassword("1234");
             dataSource = new HikariDataSource(config);
         } catch (Exception e) {
@@ -225,5 +222,23 @@ public class DBConnector {
     }
 
 
+    public int getTodayTotalTime(LocalDate date) {
+        int totalTime = 0;
+        String query = "select TOTAL_STUDYTIME from study_tb where TODAY = ?";
+        try{
+            connection = dataSource.getConnection();
+            pstmt = connection.prepareStatement(query);
+            pstmt.setDate(1, Date.valueOf(date));
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                totalTime = rs.getInt("TOTAL_STUDYTIME");
+            }
+            rs.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalTime;
+    }
 }
-
+ 
