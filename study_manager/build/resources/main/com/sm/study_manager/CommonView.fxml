@@ -14,7 +14,6 @@
     <HBox alignment="CENTER" prefHeight="56" prefWidth="600">
         <Button fx:id="topCalenderButton" onAction="#moveCalender" styleClass="topButton" text="달력" />
         <Button fx:id="topTimerButton" onAction="#moveTimer" styleClass="topButton" text="타이머" />
-        <Button fx:id="topPetButton" onAction="#movePet" styleClass="topButton" text="포켓몬" />
         <Button fx:id="topMusicButton" onAction="#moveMusic" styleClass="topButton" text="음악" />
     </HBox>
 </AnchorPane>
