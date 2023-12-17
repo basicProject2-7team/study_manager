@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="198.0" prefWidth="394.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sm.study_manager.LinkInsertController">
+   <children>
+      <Button layoutX="105.0" layoutY="-32.0" mnemonicParsing="false" text="Button" />
+      <Button fx:id="insertButton" layoutX="42.0" layoutY="151.0" mnemonicParsing="false" onAction="#insert" prefHeight="31.0" prefWidth="138.0" text="추가" />
+      <Label layoutX="24.0" layoutY="43.0" text="커스텀 제목" />
+      <TextField fx:id="nameTextInput" layoutX="100.0" layoutY="39.0" prefHeight="22.0" prefWidth="284.0" />
+      <Button fx:id="cancelButton" layoutX="210.0" layoutY="151.0" mnemonicParsing="false" onAction="#cancel" prefHeight="31.0" prefWidth="138.0" text="닫기" />
+      <TextField fx:id="linkTextInput" layoutX="100.0" layoutY="88.0" prefHeight="22.0" prefWidth="284.0" />
+      <Label layoutX="24.0" layoutY="92.0" text="유튜브 링크" />
+   </children>
+</AnchorPane>
