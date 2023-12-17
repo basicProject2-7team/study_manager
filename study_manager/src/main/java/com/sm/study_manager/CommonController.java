@@ -50,17 +50,6 @@ public class CommonController {
     }
 
     @FXML
-    protected void movePet(){
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PetView.fxml"));
-            Stage stage = (Stage) topPetButton.getScene().getWindow();
-            stage.setScene(new Scene(fxmlLoader.load()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
     protected void moveMusic(){
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MusicView.fxml"));

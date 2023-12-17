@@ -19,8 +19,8 @@ public class DBConnector {
         try {
 //            (DataSource) DriverManager.getConnection(URL, USER, PASSWORD);
             HikariConfig config = new HikariConfig();
-            config.setJdbcUrl("jdbc:mariadb://10.20.33.68:3306/studydb"); // 데이터베이스 URL
-            config.setUsername("user"); // 데이터베이스 사용자 이름
+            config.setJdbcUrl("jdbc:mariadb://localhost:3306/studydb"); // 데이터베이스 URL
+            config.setUsername("root"); // 데이터베이스 사용자 이름
             config.setPassword("1234");
             dataSource = new HikariDataSource(config);
         } catch (Exception e) {
