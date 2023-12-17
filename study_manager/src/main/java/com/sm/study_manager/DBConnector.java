@@ -179,5 +179,65 @@ public class DBConnector {
         }
         return totalTime;
     }
+
+    public boolean insertLinkItem(String title, String link) {
+        String query = "INSERT INTO youtube_link_tb (TITLE, LINK) VALUES(?, ?)";
+        boolean isInsertSuccessful = false;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement linkStmt = connection.prepareStatement(query)) {
+            linkStmt.setString(1, title);
+            linkStmt.setString(2, link);
+            int affectedRows = linkStmt.executeUpdate();
+            isInsertSuccessful = affectedRows > 0;
+
+            if (isInsertSuccessful) {
+                System.out.println("Insert successful");
+            } else {
+                System.out.println("Insert failed");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            e.printStackTrace();
+        }
+
+        return isInsertSuccessful;
+    }
+
+    public boolean deleteLink(String title) {       // 삭제 선택한 링크
+        String query = "DELETE FROM youtube_link_tb WHERE TITLE = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, title);
+            int affectedRows = stmt.executeUpdate();
+
+            return affectedRows > 0;
+        } catch (Exception e) {
+            System.out.println("Error deleting link: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<String[]> fetchAllLinks() {
+        List<String[]> links = new ArrayList<>();
+        String query = "SELECT TITLE, LINK FROM youtube_link_tb";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                String title = resultSet.getString("TITLE");
+                String link = resultSet.getString("LINK");
+                links.add(new String[] {title, link}); // 제목과 링크를 배열에 추가
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching links: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return links;
+    }
+
 }
  
