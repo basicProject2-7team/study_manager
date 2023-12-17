@@ -104,32 +104,25 @@ public class TimerController extends CommonController implements Initializable {
     // 일시정지 버튼을 누르면 stop() 했다가 다시 실행되게 해야함.
 
 
+
+    private static boolean isTimerRunningStatic = false;
     @FXML
     private void start(ActionEvent event) {  // 시작버튼 이벤트 핸들러
+        if (!isTimerRunningStatic) {
+            currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue(), secondsInput.getValue());
+            hoursInput.setValue(0);
+            minutesInput.setValue(0);
+            secondsInput.setValue(0);
+            showModalWindow();
+            currentStartTime = LocalDateTime.now();
+            scrollUp();
+            startCountdown();
 
-        currSeconds = hmsToSeconds(hoursInput.getValue(), minutesInput.getValue(), secondsInput.getValue());
-        // 현재 흘러야하는 초 값넣은것 다 갖고와서 바꿔주기
+            // 그후에
+            this.mediaPlayer = Modalcontroller.getMediaPlayer();
+            isTimerRunningStatic = true;
+        }
 
-        hoursInput.setValue(0);
-        minutesInput.setValue(0);
-        secondsInput.setValue(0);
-
-        // 인풋값 0으로 초기화
-
-        // 여기서 모달창 띄워야함.
-        showModalWindow();
-
-
-        // 모달창 꺼지면 재생된다 음악이..
-
-
-        currentStartTime = LocalDateTime.now(); // 시작 시간 기록
-
-        scrollUp(); // 시간흐르는 창으로 변하고 , 초 카운트
-
-        // 그후에
-        this.mediaPlayer = Modalcontroller.getMediaPlayer();
-        System.out.println("player Check." + this.mediaPlayer); // 플레이어도 확인.
 
         // mediaPlayer 가 생겨서 가져옴 /
     }
@@ -183,6 +176,7 @@ public class TimerController extends CommonController implements Initializable {
                 Platform.runLater(() -> { // 0에 도달하면
                     updateTotalStudyTimeLabel(); // 흐른 시간 업데이트
                     temp = 0; // 임시 시간 초기화
+                    isTimerRunningStatic = false;             // false 로 바꿈 이제 타이머 안하고있따.
                     scrollDown(); // 다운 스크롤
                 });
             } catch (InterruptedException e) {
@@ -263,6 +257,17 @@ public class TimerController extends CommonController implements Initializable {
 
             scrollDown(); // 스크롤 다운 메서드를 호출합니다.
         }
+
+        // 사용자가 '예'를 선택한 경우, 타이머를 취소하고 temp 값을 초기화합니다.
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // 기존의 취소 로직 ...
+
+            // 타이머 상태를 '실행 중이지 않음'으로 변경합니다.
+            isTimerRunningStatic = false;
+
+//            // 타이머 관련 UI를 초기 상태로 리셋합니다.
+//            resetTimerUI();
+        }
     }
 
     @FXML
@@ -322,16 +327,7 @@ public class TimerController extends CommonController implements Initializable {
         tr2.setToY(0);
         tr2.setNode(timerPane);
         ParallelTransition pt = new ParallelTransition(tr1, tr2);
-        pt.setOnFinished(e -> {
-            try {
-                System.out.println("Start Countdown");
-                startCountdown();   // 여기서 스레드시작
 
-            } catch (Exception e2) {
-                //
-
-            }
-        });
         pt.play();
     }
 
@@ -397,6 +393,7 @@ public class TimerController extends CommonController implements Initializable {
         updateTotalStudyTimeLabelFromDB();
     }
 
+
     private void updateTotalStudyTimeLabelFromDB() {
         int totalTime = dbConnector.selectTotalTime(LocalDate.now());
         totalStudyTime.setText(formatDuration(totalTime)); // 'formatDuration' 메소드는 이미 정의되어 있다고 가정
@@ -431,6 +428,11 @@ public class TimerController extends CommonController implements Initializable {
         int seconds = totalSeconds % 60;
         return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
     }
+
+
+
+
+
 
 
 

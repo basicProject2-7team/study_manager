@@ -18,7 +18,7 @@ public class ListItem {
     public String getText() {
         return text;
     }
-
+    // test 주석
     public BooleanProperty checkedProperty() {
         return checked;
     }
